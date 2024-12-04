@@ -8,7 +8,7 @@ function help{
         echo"Interdiction : hvb all, hvb indiv, hva all , hva indiv"
         echo"ID central"
         echo"option aide: -h"
-        echo "-"
+        
 }
 
     if[-h]
