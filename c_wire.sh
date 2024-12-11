@@ -1,15 +1,32 @@
 #!/bin/bash
 
-file_path=$(find .. -iname "data.csv") 2>/dev/null                                                                                      #Cette ligne de commande permet de chercher le fichier c-wire.csv dans mes dossiers
 
-Graphs_path=$(find . -type d -name "Graphs" -print -quit) 2>/dev/null                                                                   #Cette ligne de commande permet de chercher si le dosier Graphs dans mes dossiers
+#Function help
+function_help(){
+echo "To run code :$0 <path_to_CSV_file> <station_type> <consumer_type> <ID> <-h>"
+echo ""
+echo "Description of parameter: "
+echo ""
+echo "<path_to_csv_file>: File path(To find, it type the command 'ls' )"
+echo "<station_type>: hvb -hva -lv"
+echo "<consummer_type>: -comp -indiv -all"
+echo "<consummer_type> interdiction : -hvb all -hvb induv -hva all -hav indiv"
+echo "<ID>: ID of the station"
+}
 
-Temps_path=$(find . -type d -name "Temp" -print -quit) 2>/dev/null                                                                      #Cette ligne de commande permet de chercher le dossier Temps dans mes dossiers
+local file_path=$(find .. -iname "data.csv") 2>/dev/null                                                                                      #Cette ligne de commande permet de chercher le fichier c-wire.csv dans mes dossiers
+
+local Graphs_path=$(find . -type d -name "Graphs" -print -quit) 2>/dev/null                                                                   #Cette ligne de commande permet de chercher si le dosier Graphs dans mes dossiers
+
+local Temps_path=$(find . -type d -name "Temp" -print -quit) 2>/dev/null                                                                      #Cette ligne de commande permet de chercher le dossier Temps dans mes dossiers
 
 
-chmod 777 c-wire.sh
+chmod 777 c_wire.sh
 
-# Dans cette conditions je vérifie si le fichier c-wire.csv existe bien dans mes dossiers
+
+if[ -e ""]
+
+# In this condition I check if the c-wire.csv file exists in my folders
 if [ -e "$file_path" ]; then
  echo "le fichier data.csv existe"
  echo "$file_path"
