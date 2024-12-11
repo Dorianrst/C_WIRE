@@ -3,7 +3,7 @@
 
 #Function help
 function_help(){
-echo "To run code :$0 <path_to_CSV_file> <station_type> <consumer_type> <ID> <-h>"
+echo "To run code :$0 <path_to_dat_file> <station_type> <consumer_type> <ID> <-h>"
 echo ""
 echo "Description of parameter: "
 echo ""
@@ -14,17 +14,43 @@ echo "<consummer_type> interdiction : -hvb all -hvb induv -hva all -hav indiv"
 echo "<ID>: ID of the station"
 }
 
-local file_path=$(find .. -iname "data.csv") 2>/dev/null                                                                                      #Cette ligne de commande permet de chercher le fichier c-wire.csv dans mes dossiers
 
+
+
+local station_type=$2
+local consumer_type=$3
+local ID=$4 
+#We have to change this for the final test with c-wire_v25.dat
+local file_path=$(find .. -iname "c-wire_v00.dat") 2>/dev/null                                                                                      #Cette ligne de commande permet de chercher le fichier c-wire.csv dans mes dossiers
 local Graphs_path=$(find . -type d -name "Graphs" -print -quit) 2>/dev/null                                                                   #Cette ligne de commande permet de chercher si le dosier Graphs dans mes dossiers
-
 local Temps_path=$(find . -type d -name "Temp" -print -quit) 2>/dev/null                                                                      #Cette ligne de commande permet de chercher le dossier Temps dans mes dossiers
-
+local 
 
 chmod 777 c_wire.sh
 
 
-if[ -e ""]
+if [["$station_type" != "hvb" && "$station_type" != "hva" && "$station_type" != "lv"]]; then 
+    echo "Error : Invalid value" >&2
+    function_help
+    exit 1
+fi
+
+if [["$consumer_type" != "comp" && "$consumer_type" != "indiv" && "all"]] then;
+    echo "Error : Invalid value" >&2
+    function_help
+    exit 1
+fi
+
+if [-z "$ID" ] then;
+#Put a fonction ti 
+    echo "Processing all the data"
+elif ![["$ID" =~ ^[0-9]+$]];
+    
+    echo "Processing only the data of the station $ID"
+
+else 
+    echo " Correct ID"
+fi    
 
 # In this condition I check if the c-wire.csv file exists in my folders
 if [ -e "$file_path" ]; then

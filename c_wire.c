@@ -4,19 +4,19 @@
 
 typedef struct AVL
 {
-    int id; // Le numero de la station
-    char type[3]; // Type de la station (hvb, hva, lv)
-    int capacite; // Capacite max de la station
+    int id;           // Le numero de la station
+    char type[3];     // Type de la station (hvb, hva, lv)
+    int capacite;     // Capacite max de la station
     int consommation; // Somme des consommateurs de la station
 
-    int eq; // Facteur d'equilibre
-    struct AVl* fg; // Pointeur vers le fils gauche
-    struct AVL* fd; // Pointeur vers le fils droit
+    int eq;         // Facteur d'equilibre
+    struct AVl *fg; // Pointeur vers le fils gauche
+    struct AVL *fd; // Pointeur vers le fils droit
 } AVL;
 
-
-AVL* creerAVL(int id, char type[], int capacite){
-    AVL* nouveau = (AVL* )malloc(sizeof(AVL));
+AVL *creerAVL(int id, char type[], int capacite)
+{
+    AVL *nouveau = (AVL *)malloc(sizeof(AVL));
     if (nouveau == NULL)
     {
         exit(1);
@@ -33,12 +33,10 @@ AVL* creerAVL(int id, char type[], int capacite){
     return nouveau;
 }
 
-
-
-int main (int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
 
     printf("Hello World");
-
 
     return 0;
 }
