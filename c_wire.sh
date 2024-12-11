@@ -179,3 +179,38 @@ done
 end_time=$(date +%s.%s) 
 elapsed_time=$(echo "$end_time - $start_time" | bc)
 echo "Temps écoulé : $elapsed_time secondes"
+
+
+
+
+
+
+
+#Execution du programme C
+
+# Nom du fichier source C et de l'executable
+fichier_source="c_wire.c"
+executable="c_wire"
+
+# Compilation
+gcc -o $executable $fichier_source
+if [ $? -ne 0 ]; then
+    echo "Erreur : Échec de la compilation"
+    exit 1
+fi
+
+#Les arguments devront etre le fichier, la station choisi etc...
+arg1=3
+arg2=5
+arg3=7
+
+output=$(./$executable $arg1 $arg2 $arg3)
+code_return=$?
+
+# Verifier la sortie
+if [ $code_return -eq 0 ]; then
+    echo "Le calcul a réussi. Résultat : $output"
+else
+    echo "Erreur : Le programme a échoué avec le code $code_return."
+fi
+
