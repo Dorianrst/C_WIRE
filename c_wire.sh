@@ -1,5 +1,10 @@
 #!/bin/bash
 
+CSV_FILE="c-wire.dat"
+OUTPUT_DIR="output_file"
+SEPARATOR=";"
+COLUMNS=""
+
 #Function help
 function_help() {
     echo "To run code :$0 <path_to_dat_file> <station_type> <consumer_type> <ID> <-h>"
@@ -12,7 +17,7 @@ function_help() {
     echo "<consummer_type> interdiction : -hvb all -hvb induv -hva all -hav indiv"
     echo "<ID>: ID of the station"
 }
-
+#Function A function that checks that all the arguments entered by the user are correct and that no arguments are missing.
 argument_verifiaction() {
 
     local station_type=$2
@@ -53,6 +58,15 @@ argument_verifiaction() {
     fi
 }
 
+veriffication_for_executable() {
+    #Checking the .exe and compiling the C
+    if [ -f "$executable"]; then
+        echo "The  $executable already exist.Compilation of $executable ..."
+    else
+        echo "The $executable doesn't exist." >&2
+    fi
+}
+
 verification_temp_graph() {
     #This function is used to check and, if necessary, create the temp and graphs files.
     if [ -n "$Graphs_path" ]; then
@@ -77,13 +91,6 @@ verification_temp_graph() {
 filter() {
 
     local output_file
-    #Checking the .exe and compiling the C
-    if [ -f "$executable"]; then
-        echo "The  $executable already exist"
-    else
-        echo "The $executable doesn't exist. Compilation of $ executable ..."
-
-    fi
 
     #Initialisation of the start_time variable for calculating execution time
     start_time=$(date +%s.%s)
