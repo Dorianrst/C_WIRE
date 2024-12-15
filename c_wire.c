@@ -62,7 +62,6 @@ int getBalance(Avl* node) {
     return node->balance;
 }
 
-/*
 
 // Perform a right rotation
 Avl* rotateRight(Avl* node) {
@@ -93,7 +92,6 @@ Avl* rotateLeft(Avl* node) {
     pivot->balance = min3(balance_node - 2, balance_node + balance_pivot - 2, balance_pivot - 1);
 
     return pivot;
-
 }
 
 Avl* doubleRotateLeft(Avl* node){
@@ -106,54 +104,63 @@ Avl* doubleRotateRight(Avl* node){
     return rotateRight(node);
 }
 
-Avl* balanceAVL(Avl* node){
-    if(node->balance >= 2){
-        if(node->rightSon->balance >= 0){
-            return rotateLeft(node);
-        }else{
-            return doubleRotateLeft(node);
+
+
+
+Avl* equilibrerAVL(Avl* a){
+    if (a->balance >= 2){ // Cas où l'arbre est déséquilibré à droite
+        if (a->rightSon->balance >= 0){
+            return rotateLeft(a); // Rotation simple gauche
         }
-    }else if(node->balance <= -2){
-        if(node->leftSon->balance <= 0){
-            return rotateRight(node);
-        }else{
-            return doubleRotateRight(node);
+        else{
+            return doubleRotateLeft(a); // Double rotation gauche
         }
     }
-    return node;
+    else if (a->balance <= -2){ // Cas où l'arbre est déséquilibré à gauche
+        if (a->leftSon->balance <= 0){
+            return rotateRight(a); // Rotation simple droite
+        }
+        else{
+            return doubleRotateRight(a); // Double rotation droite
+        }
+    }
+    return a; // Aucun rééquilibrage nécessaire
 }
 
-*/
 
 
-Avl* insertAVL(Avl* node, long capacity, int id, int* h){
-    if(node==NULL){
-        *h = 1;
+Avl* insertAVL(Avl* a, long capacity, int id,  int *h){
+    if (a == NULL){           // Si l'arbre est vide, crée un nouveau nœud
+        *h = 1; // La hauteur a augmenté
         return createAVL(capacity, id);
     }
-    else if(id < node->id){
-        node->leftSon = insertAVL(node->leftSon, capacity, id, h);
-        *h = -*h;
+    else if (id < a->id){ // Si l'élément est plus petit, insérer à gauche
+        a->leftSon = insertAVL(a->leftSon, capacity, id, h);
+        *h = -*h; // Inverse l'impact de la hauteur
     }
-    else if(id > node->id){
-        node->rightSon = insertAVL(node->rightSon, capacity, id, h);
+    else if (id > a->id){ // Si l'élément est plus grand, insérer à droite
+        a->rightSon = insertAVL(a->rightSon, capacity, id, h);
     }
-    else{
+    else{ // Élément déjà présent
         *h = 0;
-        return node;
+        return a;
     }
-
-    if(*h != 0){
-        node -> balance += *h;
-        // node = balanceAVL(node);
-        if(node->balance == 0){
+    // Mise à jour du facteur d'équilibre et rééquilibrage si nécessaire
+    if (*h != 0)
+    {
+        a->balance += *h;
+        a = equilibrerAVL(a);
+        if(a->balance == 0){
             *h = 0;
         }else{
             *h = 1;
         }
     }
-    return node;
+    return a;
 }
+
+
+
 
 
 
@@ -161,7 +168,7 @@ Avl* insertAVL(Avl* node, long capacity, int id, int* h){
 void printAVL(Avl* node) {
     if (node != NULL){
         printAVL(node->leftSon);
-        printf("Station %d, capacity = %d, load = %d\n", node->id, node->capacity, node->load);
+        printf("Station %d, capacity = %lu, load = %lu\n", node->id, node->capacity, node->load);
         printAVL(node->rightSon);
     }
 }
@@ -186,7 +193,7 @@ int research(Avl* node, int id, Avl** searched){
 }
 
 
-void updateStation(Avl* tree, int load, int id){
+void updateStation(Avl* tree, long load, int id){
     Avl* station;
     int result = research(tree, id, &station);
     
@@ -194,7 +201,6 @@ void updateStation(Avl* tree, int load, int id){
                 return;
     }
 
-    printf("Le load a été augmenter une fois\n");
     station->load += load;
 }
 
@@ -207,7 +213,7 @@ Avl* buildAvl(Avl* tree, char* station, char *chvb, char *chva, char *clv, char 
 
     if (strcmp("hvb", station) == 0){
         // Si c'est un hvb qui ne donne a personne
-        if (strcmp("-", chvb) != 0 && strcmp("-", chva) == 0){
+        if (strcmp("-", chvb) != 0 && strcmp("-", chva) == 0 && strcmp("-", ccapa) != 0){
             // On insert la station dans l'arbre
             tree = insertAVL(tree, atol(ccapa), atoi(chvb), h);
         }
