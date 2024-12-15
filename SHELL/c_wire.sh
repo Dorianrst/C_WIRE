@@ -247,7 +247,22 @@ filter() {
         echo "Erreur : Le programme a échoué avec le code $code_return."
     fi
 }
+
 main() {
-    argument_verifiaction "$1" "$2" "$3" "$4"
-    verification_executable "$1"
+    if [[ "$*" == *"-h"* ]]; then
+        function_help
+        exit 0
+    fi
+
+    local station_type=$2
+    local consumer_type=$3
+    local ID=$4
+    #We have to change this for the final test with c-wire_v25.dat
+    local file_path=$(find .. -iname "c-wire_v00.dat") 2>/dev/null              #Cette ligne de commande permet de chercher le fichier c-wire.csv dans mes dossiers
+    local Graphs_path=$(find . -type d -name "Graphs" -print -quit) 2>/dev/null #Cette ligne de commande permet de chercher si le dosier Graphs dans mes dossiers
+    local Temps_path=$(find . -type d -name "Temp" -print -quit) 2>/dev/null
+    argument_verifiaction "file_path" "sation_type" "consumer_type" "ID"
+    #verification_executable "$1"  ;,
 }
+
+main "$@"
