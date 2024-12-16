@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 
 typedef struct Avl{
@@ -207,53 +208,57 @@ void updateStation(Avl* tree, long load, int id){
 
 
 
-Avl* buildAvl(Avl* tree, char* station, char* choice, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload){
+Avl* buildAvl(Avl* tree, char* station, char* choice, int choice_pp, char* cpp, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload){
     int ph = 0;
     int* h = &ph;
 
-
     if (strcmp("hvb", station) == 0 && !(strcmp("-", chvb) == 0)){
         // Si c'est un hvb qui ne donne a personne
-        if (strcmp("-", chva) == 0 && strcmp("-", ccapa) != 0){
-            // On insert la station dans l'arbre
-            tree = insertAVL(tree, atol(ccapa), atoi(chvb), h);
-        }
-        // On verifie que les cases company et load sont bien remplies
-        else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0){
-            // On ajoute la consommation en plus a la station
-            updateStation(tree, atol(cload), atoi(chvb));
+        if (choice_pp == 0 || choice_pp == atoi(cpp)){
+            if (strcmp("-", chva) == 0 && strcmp("-", ccapa) != 0){
+                // On insert la station dans l'arbre
+                tree = insertAVL(tree, atol(ccapa), atoi(chvb), h);
+            }
+            // On verifie que les cases company et load sont bien remplies
+            else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0){
+                // On ajoute la consommation en plus a la station
+                updateStation(tree, atol(cload), atoi(chvb));
+            }
         }
     }
     else if (strcmp("hva", station) == 0 && !(strcmp("-", chva) == 0)){
-        // Si c'est un hva qui recoit de l'énergie d'un hvb
-        if (strcmp("-", chvb) != 0){
-            // On insert la station dans l'arbre
-            tree = insertAVL(tree, atol(ccapa), atoi(chva), h);
-        }
-        // On ajoute seulement les hva qui donne à une entreprise
-        else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0){
-            // On ajoute la consommation en plus a la station
-            updateStation(tree, atol(cload), atoi(chva));
+        if (choice_pp == 0 || choice_pp == atoi(cpp)){
+            // Si c'est un hva qui recoit de l'énergie d'un hvb
+            if (strcmp("-", chvb) != 0){
+                // On insert la station dans l'arbre
+                tree = insertAVL(tree, atol(ccapa), atoi(chva), h);
+            }
+            // On ajoute seulement les hva qui donne à une entreprise
+            else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0){
+                // On ajoute la consommation en plus a la station
+                updateStation(tree, atol(cload), atoi(chva));
+            }
         }
     }
     else if (strcmp("lv", station) == 0 && !(strcmp("-", clv) == 0)){
-        // Si c'est un lv qui recoit de l'énergie d'un hva
-        if (strcmp("-", chva) != 0){
-            // On insert la station dans l'arbre
-            tree = insertAVL(tree, atol(ccapa), atoi(clv), h);
-        }
-        // Pour rajouter que les entreprises
-        else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && (strcmp("comp", choice) == 0 || strcmp("all", choice) == 0)){
-            // On ajoute la consommation en plus a la station
-            updateStation(tree, atol(cload), atoi(clv));
-        }
-        // Pour rajouter que les particuliers
-        else if (strcmp("-", cload) != 0 && strcmp("-", cindiv) != 0 && (strcmp("indiv", choice) == 0 || strcmp("all", choice) == 0)){
-            // On ajoute la consommation en plus a la station
-            updateStation(tree, atol(cload), atoi(clv));
+        if (choice_pp == 0 || choice_pp == atoi(cpp)){
+            // Si c'est un lv qui recoit de l'énergie d'un hva
+            if (strcmp("-", chva) != 0){
+                // On insert la station dans l'arbre
+                tree = insertAVL(tree, atol(ccapa), atoi(clv), h);
+            }
+            // Pour rajouter que les entreprises
+            else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && (strcmp("comp", choice) == 0 || strcmp("all", choice) == 0)){
+                // On ajoute la consommation en plus a la station
+                updateStation(tree, atol(cload), atoi(clv));
+            }
+            // Pour rajouter que les particuliers
+            else if (strcmp("-", cload) != 0 && strcmp("-", cindiv) != 0 && (strcmp("indiv", choice) == 0 || strcmp("all", choice) == 0)){
+                // On ajoute la consommation en plus a la station
+                updateStation(tree, atol(cload), atoi(clv));
+            }
         }
     }
-    
 
     return tree;
 }
@@ -261,6 +266,11 @@ Avl* buildAvl(Avl* tree, char* station, char* choice, char *chvb, char *chva, ch
 
 
 int main(int argc, char *argv[]) {
+
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();  // Démarrer le chronomètre
+
     FILE* file;
     char line[256];
     char* file_address = "c-wire_v00.dat";
@@ -270,9 +280,10 @@ int main(int argc, char *argv[]) {
     
     char* station = argv[1];
     char* choice = argv[2];
+    // int choice_pp = atoi(argv[3]);
     station = "lv";
     choice = "all";
-    
+    int choice_pp = 1;
 
     // Faire un calvse{} pour vérifier que station contient soit hvb hva ou lv
     
@@ -304,13 +315,18 @@ int main(int argc, char *argv[]) {
         ccapa = strtok(NULL, ";");
         cload = strtok(NULL, ";");
         //printf("%s %s %s %s %s %s %s %s\n", cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
-
-        tree = buildAvl(tree, station, choice, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
+        tree = buildAvl(tree, station, choice, choice_pp, cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
     }
 
 
     printAVL(tree);
     // close the file
     fclose(file);
+
+    end = clock();    // Arrêter le chronomètre
+
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; // Calculer le temps utilisé
+    printf("Temps d'execution: %.3f secondes\n", cpu_time_used);
+
     return EXIT_SUCCESS;
 }
