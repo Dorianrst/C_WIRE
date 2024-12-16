@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# Enregistrer le temps de début en secondes
+start=$(date +%s)
+
 # Chemins relatifs dynamiques
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
-DATA_FILE="$SCRIPT_DIR/c-wire_v00.dat"
+DATA_FILE="$SCRIPT_DIR/c-wire_v25.dat"
 EXECUTABLE="$PROJECT_DIR/c_wire"
 OUTPUT_FILE="$PROJECT_DIR/output.csv"
 
@@ -121,6 +124,7 @@ process_station() {
     echo "Traitement de la station ID $ID de type '$station_type' pour le type de consommateur '$consumer_type'."
 }
 
+
 # Placeholder pour la fonction verification_temp_graph
 verification_temp_graph() {
     # Paths relative to the main project
@@ -162,5 +166,16 @@ fi
 
 echo "Démarrage de la vérification des arguments..."
 argument_verification "$1" "$2" "$3"
+
+
 veriffication_for_executable "$@"
 verification_temp_graph
+
+
+# Enregistrer le temps de fin en secondes
+end=$(date +%s)
+# Calculer la durée (en secondes)
+duration=$((end - start))
+
+# Convertir nanosecondes en secondes avec printf
+echo "Temps d'exécution: $duration secondes"
