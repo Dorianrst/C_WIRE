@@ -19,6 +19,13 @@ int main()
     printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
     printf("\033[0m"); // Réinitialiser les couleurs
 
+    // Lancer le fichier audio en arrière-plan
+        if (system("start /min musique.mp3") != 0) {
+            printf("Erreur : impossible de lancer musique.mp3\n");
+        } else {
+            printf("Musique lancée en arrière-plan !\n");
+        }
+
     printf("\n");
     printf("\n");
     printf("\n");
