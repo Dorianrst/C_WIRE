@@ -8,4 +8,4 @@ set ylabel "Load"  # Légende de l'axe des Y
 set grid ytics  # Activer la grille sur l'axe Y
 
 # Tracer le graphique à barres
-plot 'HVA.dat' using 1:2 with boxes title 'Charge'
+plot 'HVA.csv' using 1:2 with boxes title 'Charge'
