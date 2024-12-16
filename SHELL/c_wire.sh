@@ -48,7 +48,8 @@ argument_verifiaction() {
     # Validate station ID
     if [ -z "$ID" ]; then
         echo "No station ID provided. Processing all stations of type '$station_type'."
-    elif [ "$ID" -lt 1 ] || [ "$ID" -gt 5 ]; then
+
+    elif [ "$ID" -gt 5 ]; then
         echo "Error: Station ID must be between 1 and 5."
         function_help
         exit 4
@@ -98,12 +99,12 @@ if [ "$1" == "-h" ]; then
     exit 0
 fi
 
-if [ $# -lt 4 ]; then
+if [ $# -lt 3 ]; then
     echo "Error: Missing arguments."
     function_help
     exit 8
 fi
-
+echo "Please insert your arguments in the terminal"
 argument_verifiaction "$1" "$2" "$3" "$4"
 veriffication_for_executable "$@"
 verification_temp_graph

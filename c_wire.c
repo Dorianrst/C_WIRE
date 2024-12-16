@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 
+// AVL Tree Node Definition
 typedef struct Avl
 {
     struct Avl *leftSon;
@@ -13,325 +14,237 @@ typedef struct Avl
     long load;
 } Avl;
 
-int min(int a, int b)
-{
-    return (a < b) ? a : b;
-}
+// Utility Functions
+int min(int a, int b) { return (a < b) ? a : b; }
+int max(int a, int b) { return (a > b) ? a : b; }
+int max3(int a, int b, int c) { return max(a, max(b, c)); }
+int min3(int a, int b, int c) { return min(a, min(b, c)); }
 
-int max(int a, int b)
-{
-    return (a > b) ? a : b;
-}
-
-int max3(int a, int b, int c)
-{
-    return (a > b) ? (a > c ? a : c) : (b > c ? b : c);
-}
-
-int min3(int a, int b, int c)
-{
-    return (a < b) ? (a < c ? a : c) : (b < c ? b : c);
-}
-
+// Create a New Node
 Avl *createNode()
 {
-    Avl *new = malloc(sizeof(Avl));
-    if (new == NULL)
+    Avl *newNode = malloc(sizeof(Avl));
+    if (!newNode)
     {
-        printf("Memory allocation failed");
-        exit(1);
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
     }
-    new->leftSon = NULL;
-    new->rightSon = NULL;
-    new->balance = 0;
-    new->capacity = 0;
-    new->id = 0;
-    new->load = 0;
-    return new;
+    newNode->leftSon = NULL;
+    newNode->rightSon = NULL;
+    newNode->balance = 0;
+    newNode->capacity = 0;
+    newNode->id = 0;
+    newNode->load = 0;
+    return newNode;
 }
 
+// Create AVL Tree Node with Capacity and ID
 Avl *createAVL(long capacity, int id)
 {
-    Avl *new = createNode();
-    new->capacity = capacity;
-    new->id = id;
-    return new;
+    Avl *newNode = createNode();
+    newNode->capacity = capacity;
+    newNode->id = id;
+    return newNode;
 }
 
-// Get the height of a node
-int getBalance(Avl *node)
-{
-    if (node == NULL)
-    {
-        return 0;
-    }
-    return node->balance;
-}
+// Get the Balance Factor of a Node
+int getBalance(Avl *node) { return node ? node->balance : 0; }
 
-// Perform a right rotation
+// Right Rotation
 Avl *rotateRight(Avl *node)
 {
     Avl *pivot = node->leftSon;
-    int balance_node = node->balance;
-    int balance_pivot = pivot->balance;
-
     node->leftSon = pivot->rightSon;
     pivot->rightSon = node;
-
-    node->balance = balance_node - min(balance_pivot, 0) + 1;
-    pivot->balance = max3(balance_node + 2, balance_node + balance_pivot + 2, balance_pivot + 1);
-
+    node->balance -= 1 + max(0, pivot->balance);
+    pivot->balance -= 1 - min(0, node->balance);
     return pivot;
 }
 
-// Perform a left rotation
+// Left Rotation
 Avl *rotateLeft(Avl *node)
 {
     Avl *pivot = node->rightSon;
-    int balance_node = node->balance;
-    int balance_pivot = pivot->balance;
-
     node->rightSon = pivot->leftSon;
     pivot->leftSon = node;
-
-    node->balance = balance_node - max(balance_pivot, 0) - 1;
-    pivot->balance = min3(balance_node - 2, balance_node + balance_pivot - 2, balance_pivot - 1);
-
+    node->balance += 1 - min(0, pivot->balance);
+    pivot->balance += 1 + max(0, node->balance);
     return pivot;
 }
 
+// Double Left Rotation
 Avl *doubleRotateLeft(Avl *node)
 {
     node->rightSon = rotateRight(node->rightSon);
     return rotateLeft(node);
 }
 
+// Double Right Rotation
 Avl *doubleRotateRight(Avl *node)
 {
     node->leftSon = rotateLeft(node->leftSon);
     return rotateRight(node);
 }
 
-Avl *equilibrerAVL(Avl *a)
+// Rebalance AVL Tree
+Avl *rebalanceAVL(Avl *node)
 {
-    if (a->balance >= 2)
-    { // Cas où l'arbre est déséquilibré à droite
-        if (a->rightSon->balance >= 0)
-        {
-            return rotateLeft(a); // Rotation simple gauche
-        }
+    if (node->balance >= 2)
+    {
+        if (node->rightSon->balance >= 0)
+            return rotateLeft(node);
         else
-        {
-            return doubleRotateLeft(a); // Double rotation gauche
-        }
+            return doubleRotateLeft(node);
     }
-    else if (a->balance <= -2)
-    { // Cas où l'arbre est déséquilibré à gauche
-        if (a->leftSon->balance <= 0)
-        {
-            return rotateRight(a); // Rotation simple droite
-        }
+    else if (node->balance <= -2)
+    {
+        if (node->leftSon->balance <= 0)
+            return rotateRight(node);
         else
-        {
-            return doubleRotateRight(a); // Double rotation droite
-        }
+            return doubleRotateRight(node);
     }
-    return a; // Aucun rééquilibrage nécessaire
+    return node;
 }
 
-Avl *insertAVL(Avl *a, long capacity, int id, int *h)
+// Insert into AVL Tree
+Avl *insertAVL(Avl *node, long capacity, int id, int *h)
 {
-    if (a == NULL)
-    {           // Si l'arbre est vide, crée un nouveau nœud
-        *h = 1; // La hauteur a augmenté
+    if (!node)
+    {
+        *h = 1;
         return createAVL(capacity, id);
     }
-    else if (id < a->id)
-    { // Si l'élément est plus petit, insérer à gauche
-        a->leftSon = insertAVL(a->leftSon, capacity, id, h);
-        *h = -*h; // Inverse l'impact de la hauteur
+    else if (id < node->id)
+    {
+        node->leftSon = insertAVL(node->leftSon, capacity, id, h);
+        *h = -*h;
     }
-    else if (id > a->id)
-    { // Si l'élément est plus grand, insérer à droite
-        a->rightSon = insertAVL(a->rightSon, capacity, id, h);
+    else if (id > node->id)
+    {
+        node->rightSon = insertAVL(node->rightSon, capacity, id, h);
     }
     else
-    { // Élément déjà présent
-        *h = 0;
-        return a;
-    }
-    // Mise à jour du facteur d'équilibre et rééquilibrage si nécessaire
-    if (*h != 0)
     {
-        a->balance += *h;
-        a = equilibrerAVL(a);
-        if (a->balance == 0)
-        {
-            *h = 0;
-        }
-        else
-        {
-            *h = 1;
-        }
+        *h = 0;
+        return node;
     }
-    return a;
+    if (*h)
+    {
+        node->balance += *h;
+        node = rebalanceAVL(node);
+        *h = node->balance == 0 ? 0 : 1;
+    }
+    return node;
 }
 
+// Search AVL Node by ID
+int search(Avl *node, int id, Avl **result)
+{
+    if (!node)
+        return 0;
+    if (node->id == id)
+    {
+        *result = node;
+        return 1;
+    }
+    return (id < node->id) ? search(node->leftSon, id, result) : search(node->rightSon, id, result);
+}
+
+// Update Station Load
+void updateStation(Avl *tree, long load, int id)
+{
+    Avl *station;
+    if (search(tree, id, &station))
+    {
+        station->load += load;
+    }
+}
+
+// Build AVL Tree Based on Input Data
+Avl *buildAvl(Avl *tree, int isLv, int isHva, int isHvb, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload)
+{
+    int h = 0;
+    if (isLv)
+    {
+        if (strcmp("-", ccomp) || strcmp("-", cindiv))
+            updateStation(tree, atol(cload), atoi(clv));
+        else
+            tree = insertAVL(tree, atol(ccapa), atoi(clv), &h);
+    }
+    else if (isHva)
+    {
+        if (strcmp("-", ccomp) || strcmp("-", cindiv))
+            updateStation(tree, atol(cload), atoi(chva));
+        else if (strcmp("-", clv))
+            updateStation(tree, atol(ccapa), atoi(chva));
+        else
+            tree = insertAVL(tree, atol(ccapa), atoi(chva), &h);
+    }
+    else if (isHvb)
+    {
+        if (strcmp("-", ccomp) || strcmp("-", cindiv))
+            updateStation(tree, atol(cload), atoi(chvb));
+        else if (strcmp("-", clv) || strcmp("-", chva))
+            updateStation(tree, atol(ccapa), atoi(chvb));
+        else
+            tree = insertAVL(tree, atol(ccapa), atoi(chvb), &h);
+    }
+    return tree;
+}
+
+// Print AVL Tree
 void printAVL(Avl *node)
 {
-    if (node != NULL)
+    if (node)
     {
         printAVL(node->leftSon);
-        printf("Station %d, capacity = %lu, load = %lu\n", node->id, node->capacity, node->load);
+        printf("Station %d, capacity = %ld, load = %ld\n", node->id, node->capacity, node->load);
         printAVL(node->rightSon);
     }
 }
 
-//======================================= PROCESS WHILE MAKEFILE NOT MADE ===================================
-
-int research(Avl *node, int id, Avl **searched)
-{
-    if (node == NULL)
-    {
-        return 0;
-    }
-    if (node->id == id)
-    {
-        *searched = node;
-        return 1;
-    }
-    if (node->id > id)
-    {
-        return research(node->leftSon, id, searched);
-    }
-    if (node->id < id)
-    {
-        return research(node->rightSon, id, searched);
-    }
-}
-
-void updateStation(Avl *tree, long load, int id)
-{
-    Avl *station;
-    int result = research(tree, id, &station);
-
-    if (!result)
-    {
-        return;
-    }
-
-    station->load += load;
-}
-
-Avl *buildAvl(Avl *tree, char *station, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload)
-{
-    int ph = 0;
-    int *h = &ph;
-
-    if (strcmp("hvb", station) == 0)
-    {
-        // Si c'est un hvb qui ne donne a personne
-        if (strcmp("-", chvb) != 0 && strcmp("-", chva) == 0 && strcmp("-", ccapa) != 0)
-        {
-            // On insert la station dans l'arbre
-            tree = insertAVL(tree, atol(ccapa), atoi(chvb), h);
-        }
-        // On verifie que les cases company et load sont bien remplies
-        else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && strcmp("-", chvb) != 0)
-        {
-            // On ajoute la consommation en plus a la station
-            updateStation(tree, atol(cload), atoi(chvb));
-        }
-    }
-
-    /*
-    if(isLv){
-
-        if (strcmp("-", ccomp) || strcmp("-", cindiv)){ // this is a consumer
-            updateStation(tree, atoi(clv), atol(cload));
-        }else{ // this is a lv station
-            tree = insertAVL(tree, atol(ccapa), &h, atol(clv));
-        }
-    }else if(isHva){
-        if (strcmp("-", ccomp) || strcmp("-", cindiv)){ // this is a consumer
-            updateStation(tree, atoi(chva), atol(cload));
-        }
-        else if(strcmp("-", clv)){ // this is a lv station
-            updateStation(tree, atoi(chva), atol(ccapa));
-        }
-        else{ // this is a hva station
-            tree = insertAVL(tree, atol(ccapa), &h, atol(chva));
-        }
-    }else if(isHvb){
-        if (strcmp("-", ccomp) || strcmp("-", cindiv)){ // this is a consumer
-            updateStation(tree, atoi(chvb), atol(cload));
-        }
-        else if(strcmp("-", clv) || strcmp("-", chva)){ // this is a lv or hva
-            updateStation(tree, atoi(chvb), atol(ccapa));
-        }else{ // this is a hvb station
-            tree = insertAVL(tree, atol(ccapa), &h, atol(chvb));
-        }
-    }
-    */
-
-    return tree;
-}
-
+// Main Function
 int main(int argc, char *argv[])
 {
-    FILE *file;
-    char line[256];
-    char *file_address = "c-wire_v00.dat";
-    char *cpp, *chvb, *chva, *clv, *ccomp, *cindiv, *ccapa, *cload;
-
-    int pp, hvb, hva, lv, comp, indiv, capa, load;
-
-    char *station = argv[1];
-    station = "hvb";
-    // Faire un case{} pour vérifier que station contient soit hvb hva ou lv
-
-    Avl *tree = NULL;
-
-    // Open the file
-    file = fopen(file_address, "r");
-    if (file == NULL)
+    if (argc < 2)
     {
-        printf("Error while opening file\n");
-        exit(2);
+        fprintf(stderr, "Usage: %s <station_type>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
-    fgets(line, sizeof(line), file);
-    line[strcspn(line, "\n")] = '\0';
-    cpp = strtok(line, ";");
-    chvb = strtok(NULL, ";");
-    chva = strtok(NULL, ";");
-    clv = strtok(NULL, ";");
+    char *stationType = argv[1];
+    Avl *tree = NULL;
 
-    rewind(file);
-    // read each line
+    FILE *file = fopen("c-wire_v00.dat", "r");
+    if (!file)
+    {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[256];
+    fgets(line, sizeof(line), file); // Skip header
+
     while (fgets(line, sizeof(line), file))
     {
+        char *cpp = strtok(line, ";");
+        char *chvb = strtok(NULL, ";");
+        char *chva = strtok(NULL, ";");
+        char *clv = strtok(NULL, ";");
+        char *ccomp = strtok(NULL, ";");
+        char *cindiv = strtok(NULL, ";");
+        char *ccapa = strtok(NULL, ";");
+        char *cload = strtok(NULL, ";");
 
-        // delete line jump
-        line[strcspn(line, "\n")] = '\0';
+        int isLv = strcmp(stationType, "lv") == 0;
+        int isHva = strcmp(stationType, "hva") == 0;
+        int isHvb = strcmp(stationType, "hvb") == 0;
 
-        // cut each string with ';'
-        cpp = strtok(line, ";");
-        chvb = strtok(NULL, ";");
-        chva = strtok(NULL, ";");
-        clv = strtok(NULL, ";");
-        ccomp = strtok(NULL, ";");
-        cindiv = strtok(NULL, ";");
-        ccapa = strtok(NULL, ";");
-        cload = strtok(NULL, ";");
-        // printf("%s %s %s %s %s %s %s %s\n", cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
-
-        tree = buildAvl(tree, station, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
+        tree = buildAvl(tree, isLv, isHva, isHvb, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
     }
 
     printAVL(tree);
-    // close the file
     fclose(file);
-    printf("Test\n");
-    return EXIT_SUCCESS;
+
+    return 0;
 }
