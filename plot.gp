@@ -1,5 +1,5 @@
 set terminal pngcairo  # Pour générer un graphique en PNG
-set output 'bar_chart.png'  # Nom du fichier de sortie
+set output 'Graphs\bar_chart.png'  # Nom du fichier de sortie
 set boxwidth 0.5 relative  # Largeur des barres
 set style fill solid 0.6  # Style de remplissage des barres
 set title "Graphique à barres des charges par station"  # Titre du graphique
