@@ -6,7 +6,7 @@ start=$(date +%s)
 # Chemins relatifs dynamiques
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
-DATA_FILE="$SCRIPT_DIR/c-wire_v25.dat"
+DATA_FILE="$SCRIPT_DIR/c-wire_v00.dat"
 EXECUTABLE="$PROJECT_DIR/c_wire"
 OUTPUT_FILE="$PROJECT_DIR/output.csv"
 
