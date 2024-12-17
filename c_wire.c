@@ -177,6 +177,33 @@ void printAVL(Avl* node) {
 //======================================= PROCESS WHILE MAKEFILE NOT MADE ===================================
 
 
+
+
+// Fonction pour écrire un nœud dans le fichier CSV
+void writeToCsv(FILE *csvFile, int id, long capacity, long load) {
+    fprintf(csvFile, "%d,%lu,%lu\n", id, capacity, load);
+}
+
+// Fonction pour parcourir l'AVL et écrire dans un fichier CSV
+void writeAVLToCsv(Avl *node, FILE *csvFile) {
+    if (node != NULL) {
+        // Ecriture récursive des nœuds gauche
+        writeAVLToCsv(node->leftSon, csvFile);
+
+        // Ecriture du nœud courant
+        writeToCsv(csvFile, node->id, node->capacity, node->load);
+
+        // Ecriture récursive des nœuds droit
+        writeAVLToCsv(node->rightSon, csvFile);
+    }
+}
+
+
+
+
+
+
+
 int research(Avl* node, int id, Avl** searched){
     if (node==NULL){
         return 0;
@@ -208,7 +235,7 @@ void updateStation(Avl* tree, long load, int id){
 
 
 
-Avl* buildAvl(Avl* tree, char* station, char* choice, int choice_pp, char* cpp, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload){
+Avl* buildAvl(Avl* tree, char* station, char* type, int choice_pp, char* cpp, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload){
     int ph = 0;
     int* h = &ph;
 
@@ -248,12 +275,12 @@ Avl* buildAvl(Avl* tree, char* station, char* choice, int choice_pp, char* cpp, 
                 tree = insertAVL(tree, atol(ccapa), atoi(clv), h);
             }
             // Pour rajouter que les entreprises
-            else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && (strcmp("comp", choice) == 0 || strcmp("all", choice) == 0)){
+            else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && (strcmp("comp", type) == 0 || strcmp("all", type) == 0)){
                 // On ajoute la consommation en plus a la station
                 updateStation(tree, atol(cload), atoi(clv));
             }
             // Pour rajouter que les particuliers
-            else if (strcmp("-", cload) != 0 && strcmp("-", cindiv) != 0 && (strcmp("indiv", choice) == 0 || strcmp("all", choice) == 0)){
+            else if (strcmp("-", cload) != 0 && strcmp("-", cindiv) != 0 && (strcmp("indiv", type) == 0 || strcmp("all", type) == 0)){
                 // On ajoute la consommation en plus a la station
                 updateStation(tree, atol(cload), atoi(clv));
             }
@@ -266,27 +293,30 @@ Avl* buildAvl(Avl* tree, char* station, char* choice, int choice_pp, char* cpp, 
 
 
 int main(int argc, char *argv[]) {
-    // Affichage de l'ASCII Art en rouge
-        printf("\033[1;31m"); // Rouge en gras
-        printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n");
-        printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n");
-        printf("| |     ______   | || |              | || | _____  _____ | || |     _____    | || |  _______     | || |  _________   | |\n");
-        printf("| |   .' ___  |  | || |              | || ||_   _||_   _|| || |    |_   _|   | || | |_   __ \\    | || | |_   ___  |  | |\n");
-        printf("| |  / .'   \\_|  | || |              | || |  | | /\ | |  | || |      | |     | || |   | |__) |   | || |   | |_  \\_|  | |\n");
-        printf("| |  | |         | || |              | || |  | |/  \\| |  | || |      | |     | || |   |  __ /    | || |   |  _|  _   | |\n");
-        printf("| |  \\ `.___.'\\  | || |              | || |  |   /\\   |  | || |     _| |_    | || |  _| |  \\ \\_  | || |  _| |___/ |  | |\n");
-        printf("| |   `._____.`  | || |   _______    | || |  |__/  \\__|  | || |    |_____|   | || | |____| |___| | || | |_________|  | |\n");
-        printf("| |              | || |  |_______|   | || |              | || |              | || |              | || |              | |\n");
-        printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n");
-        printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
-        printf("\033[0m"); // Réinitialiser les couleurs
 
-        // Lancer le fichier audio en arrière-plan
-        if (system("start /min musique.mp3") != 0) {
-            printf("Erreur : impossible de lancer musique.mp3\n");
-        } else {
-            printf("Musique lancée en arrière-plan !\n");
-        }
+    // Affichage de l'ASCII Art en rouge
+    printf("\033[1;31m"); // Rouge en gras
+    printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n");
+    printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n");
+    printf("| |     ______   | || |              | || | _____  _____ | || |     _____    | || |  _______     | || |  _________   | |\n");
+    printf("| |   .' ___  |  | || |              | || ||_   _||_   _|| || |    |_   _|   | || | |_   __ \\    | || | |_   ___  |  | |\n");
+
+    printf("| |  | |         | || |              | || |  | |/  \\| |  | || |      | |     | || |   |  __ /    | || |   |  _|  _   | |\n");
+    printf("| |  \\ `.___.'\\  | || |              | || |  |   /\\   |  | || |     _| |_    | || |  _| |  \\ \\_  | || |  _| |___/ |  | |\n");
+    printf("| |   `._____.`  | || |   _______    | || |  |__/  \\__|  | || |    |_____|   | || | |____| |___| | || | |_________|  | |\n");
+    printf("| |              | || |  |_______|   | || |              | || |              | || |              | || |              | |\n");
+    printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n");
+    printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
+    printf("\033[0m"); // Réinitialiser les couleurs
+
+    // Lancer le fichier audio en arrière-plan
+    /*
+    if (system("start /musique.mp3") != 0) {
+        printf("Erreur : impossible de lancer musique.mp3\n");
+    } else {
+        printf("Musique lancée en arrière-plan !\n");
+    }
+    */
 
     clock_t start, end;
     double cpu_time_used;
@@ -294,19 +324,21 @@ int main(int argc, char *argv[]) {
 
     FILE* file;
     char line[256];
-    char* file_address = "c-wire_v00.dat";
+    char* file_address = argv[1];
     char *cpp, *chvb, *chva, *clv, *ccomp, *cindiv, *ccapa, *cload;
     
-    int pp, hvb, hva, lv, comp, indiv, capa, load;
-    
-    char* station = argv[1];
-    char* choice = argv[2];
-    // int choice_pp = atoi(argv[3]);
-    station = "lv";
-    choice = "all";
-    int choice_pp = 1;
 
-    // Faire un calvse{} pour vérifier que station contient soit hvb hva ou lv
+    int pp, hvb, hva, lv, comp, indiv, capa, load;
+    char* station = argv[2];
+    char* type = argv[3];
+
+    int choice_pp = atoi(argv[4]);
+
+    if(choice_pp < 0 || choice_pp > 5){
+        choice_pp = 0;
+    }
+
+    
     
     Avl* tree = NULL;
     
@@ -336,11 +368,31 @@ int main(int argc, char *argv[]) {
         ccapa = strtok(NULL, ";");
         cload = strtok(NULL, ";");
         //printf("%s %s %s %s %s %s %s %s\n", cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
-        tree = buildAvl(tree, station, choice, choice_pp, cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
+        tree = buildAvl(tree, station, type, choice_pp, cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
     }
 
 
     printAVL(tree);
+    
+    FILE* csvFile;
+    // Ouvrir un fichier CSV pour l'écriture
+    csvFile = fopen("output.csv", "w");
+    if (csvFile == NULL) {
+        fprintf(stderr, "Erreur : impossible de créer output.csv\n");
+        return EXIT_FAILURE;
+    }
+
+    // Écrire l'en-tête du fichier CSV
+    fprintf(csvFile, "ID,Capacity,Load\n");
+
+    // Parcourir l'AVL et écrire les données dans le CSV
+    writeAVLToCsv(tree, csvFile);
+
+    // Fermer le fichier CSV
+    fclose(csvFile);
+
+    printf("Les données ont été exportées avec succès dans output.csv\n");
+
     // close the file
     fclose(file);
 
