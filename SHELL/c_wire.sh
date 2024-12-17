@@ -1,137 +1,137 @@
 #!/bin/bash
 
-# Enregistrer le temps de début en secondes
+# Record start time in seconds
 start=$(date +%s)
 
-# Chemins relatifs dynamiques
+# Dynamic relative paths
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
 DATA_FILE="$SCRIPT_DIR/c-wire_v00.dat"
 EXECUTABLE="$PROJECT_DIR/c_wire"
 OUTPUT_FILE="$PROJECT_DIR/output.csv"
 
-# Fonction pour nettoyer les espaces autour d'une chaîne
+# Function to clean up spaces around a string
 trim() {
     echo "$1" | xargs
 }
 
-# Fonction d'aide
+# Help function
 function_help() {
     echo "Usage: $0 <station_type> <consumer_type> [ID] [-h]"
     echo ""
-    echo "Description des paramètres :"
+    echo "Parameter description:"
     echo "<station_type>: hvb | hva | lv."
     echo "<consumer_type>: comp | indiv | all."
-    echo "[ID]: (Optionnel) ID de station entre 1 et 5. Si non fourni, toutes les stations seront traitées."
-    echo "-h: Affiche ce message d'aide."
+    echo "[ID]: (Optional) Station ID between 1 and 5. If not supplied, all stations will be processed."
+    echo "-h: Displays this help message."
 }
 
 debug_arguments() {
-    echo "DEBUG: Arguments reçus :"
+    echo "DEBUG: Arguments received:"
     echo "  Station type: '$2'"
     echo "  Consumer type: '$3'"
     echo "  ID: '$4'"
     echo ""
 }
-# Vérification des arguments
+
+# Argument verification
 argument_verification() {
     local station_type=$(trim "$2")
     local consumer_type=$(trim "$3")
     local ID=$(trim "$4")
 
-    # Vérification de l'existence du fichier de données
+    # Check that the data file exists
     if [ ! -f "$DATA_FILE" ]; then
-        echo "Erreur : Le fichier de données '$DATA_FILE' est introuvable."
+        echo "Error: The data file '$DATA_FILE' cannot be found."
         exit 1
     fi
 
-    # Validation du type de station
+    # Validation of station type
     if [[ "$station_type" != "hvb" && "$station_type" != "hva" && "$station_type" != "lv" ]]; then
-        echo "Erreur : Type de station invalide. Valeurs autorisées : hvb, hva, lv."
+        echo "Error: Invalid station type. Allowed values: hvb, hva, lv."
         exit 2
     fi
 
-    # Validation du type de consommateur
+    # Validation of consumer type
     if [[ "$consumer_type" != "comp" && "$consumer_type" != "indiv" && "$consumer_type" != "all" ]]; then
-        echo "Erreur : Type de consommateur invalide. Valeurs autorisées : comp, indiv, all."
+        echo "Error: Invalid consumer type. Allowed values: comp, indiv, all."
         exit 3
     fi
 
-    # Validation de l'ID de station
+    # Validation of station ID
     if [ -z "$ID" ]; then
-        echo "Aucun ID de station fourni. Toutes les stations de type '$station_type' seront traitées."
+        echo "No station ID provided. All stations of type '$station_type' will be processed."
         process_all_stations "$station_type" "$consumer_type"
     else
         if [[ "$ID" =~ ^[0-9]+$ ]] && [ "$ID" -ge 1 ] && [ "$ID" -le 5 ]; then
-            echo "Traitement de la station ID: $ID."
+            echo "Processing station ID: $ID."
             process_station "$station_type" "$consumer_type" "$ID"
         else
-            echo "Erreur : L'ID de station doit être un nombre entre 1 et 5."
+            echo "Error: The station ID must be a number between 1 and 5."
             exit 4
         fi
     fi
 }
 
-# Vérification et compilation de l'exécutable
-veriffication_for_executable() {
-    local script_dir=$(dirname "$0")          # Répertoire contenant le script
-    local project_dir="$script_dir/.."        # Répertoire racine du projet
-    local source_file="$project_dir/c_wire.c" # Fichier source
-    local executable="$project_dir/c_wire"    # Exécutable
+# Check and compile the executable
+check_for_executable() {
+    local script_dir=$(dirname "$0")          # Directory containing the script
+    local project_dir="$script_dir/.."        # Root directory of the project
+    local source_file="$project_dir/c_wire.c" # Source file
+    local executable="$project_dir/c_wire"    # Executable
 
-    # Vérifier si l'exécutable existe
+    # Verify if the executable exists
     if [ ! -x "$executable" ]; then
-        echo "L'exécutable '$executable' est introuvable. Tentative de compilation..."
+        echo "The executable '$executable' was not found. Attempting compilation..."
 
-        # Vérifier si le fichier source existe
+        # Verify if the source file exists
         if [ ! -f "$source_file" ]; then
-            echo "Erreur : Le fichier source '$source_file' est introuvable."
+            echo "Error: The source file '$source_file' cannot be found."
             exit 5
         fi
 
-        # Compiler le fichier source
+        # Compile the source file
         gcc "$source_file" -o "$executable"
         if [ $? -ne 0 ]; then
-            echo "Erreur : La compilation de '$source_file' a échoué."
+            echo "Error: Compilation of '$source_file' failed."
             exit 6
         fi
-        echo "Compilation réussie. Exécutable créé : '$executable'."
+        echo "Compilation successful. Executable created: '$executable'."
     fi
 
-    # Exécuter l'exécutable avec les arguments fournis
-    echo "Exécution de '$executable' avec les arguments : $@"
-    "$executable" "$@" >"$project_dir/output.csv" # Redirection vers un fichier CSV
+    # Run the executable with the provided arguments
+    echo "Running '$executable' with arguments: $@"
+    "$executable" "$@" >"$PROJECT_DIR/output.csv" # Redirect output to a CSV file
     if [ $? -ne 0 ]; then
-        echo "Erreur : L'exécution de '$executable' a échoué."
+        echo "Error: Execution of '$executable' failed."
         exit 7
     fi
 
-    echo "Exécution réussie. Résultats sauvegardés dans '$project_dir/output.csv'."
+    echo "Execution successful. Results saved in '$PROJECT_DIR/output.csv'."
 }
 
-# Placeholder pour traiter toutes les stations
+# Placeholder for processing all stations
 process_all_stations() {
     local station_type=$1
     local consumer_type=$2
-    echo "Traitement de toutes les stations de type '$station_type' pour le type de consommateur '$consumer_type'."
+    echo "Processing all stations of type '$station_type' for consumer type '$consumer_type'."
 }
 
-# Placeholder pour traiter une station spécifique
+# Placeholder for processing a specific station
 process_station() {
     local station_type=$1
     local consumer_type=$2
     local ID=$3
-    echo "Traitement de la station ID $ID de type '$station_type' pour le type de consommateur '$consumer_type'."
+    echo "Processing station ID $ID of type '$station_type' for consumer type '$consumer_type'."
 }
 
-
-# Placeholder pour la fonction verification_temp_graph
+# Placeholder for the function verification_temp_graph
 verification_temp_graph() {
     # Paths relative to the main project
-    local script_dir=$(dirname "$0")          # Directory containing the script (SHELL)
-    local project_dir="$script_dir/.."        # Root directory of the project
-    local Graphs_path="$project_dir/Graphs"   # Path to the 'Graphs' directory in the project
-    local Temps_path="$project_dir/temp"      # Path to the 'temp' directory in the project
+    local script_dir=$(dirname "$0")        # Directory containing the script (SHELL)
+    local project_dir="$script_dir/.."      # Root directory of the project
+    local Graphs_path="$project_dir/Graphs" # Path to the 'Graphs' directory in the project
+    local Temps_path="$project_dir/temp"    # Path to the 'temp' directory in the project
 
     # Managing the 'Graphs' directory
     if [ -d "$Graphs_path" ]; then
@@ -152,30 +152,28 @@ verification_temp_graph() {
     fi
 }
 
-# Logique principale
+# Main logic
 if [ "$1" == "-h" ]; then
     function_help
     exit 0
 fi
 
 if [ $# -lt 2 ]; then
-    echo "Erreur : Arguments manquants."
+    echo "Error: Missing arguments."
     function_help
     exit 8
 fi
 
-echo "Démarrage de la vérification des arguments..."
+echo "Starting argument verification..."
 argument_verification "$1" "$2" "$3"
 
-
-veriffication_for_executable "$@"
+check_for_executable "$@"
 verification_temp_graph
 
-
-# Enregistrer le temps de fin en secondes
+# Record the end time in seconds
 end=$(date +%s)
-# Calculer la durée (en secondes)
+# Calculate the duration (in seconds)
 duration=$((end - start))
 
-# Convertir nanosecondes en secondes avec printf
-echo "Temps d'exécution: $duration secondes"
+# Output the execution time
+echo "Execution time: $duration seconds"
