@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-#include "setting.h"
 
 
 typedef struct Avl{
@@ -291,6 +290,13 @@ Avl* buildAvl(Avl* tree, char* station, char* type, int choice_pp, char* cpp, ch
     return tree;
 }
 
+void freeAVL(Avl* node) {
+    if (node != NULL) {
+        freeAVL(node->leftSon);   // Libère le sous-arbre gauche
+        freeAVL(node->rightSon);  // Libère le sous-arbre droit
+        free(node);               // Libère le nœud actuel
+    }
+}
 
 
 int main(int argc, char *argv[]) {
@@ -311,13 +317,13 @@ int main(int argc, char *argv[]) {
     printf("\033[0m"); // Réinitialiser les couleurs
 
     // Lancer le fichier audio en arrière-plan
-    /*
-    if (system("start /musique.mp3") != 0) {
+    
+    if (system("start musique.mp3") != 0) {
         printf("Erreur : impossible de lancer musique.mp3\n");
     } else {
         printf("Musique lancée en arrière-plan !\n");
     }
-    */
+    
 
     clock_t start, end;
     double cpu_time_used;
@@ -402,5 +408,9 @@ int main(int argc, char *argv[]) {
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; // Calculer le temps utilisé
     printf("Temps d'execution: %.3f secondes\n", cpu_time_used);
 
+
+    
+    freeAVL(tree); 
+    
     return EXIT_SUCCESS;
 }
