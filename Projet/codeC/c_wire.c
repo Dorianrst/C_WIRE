@@ -376,8 +376,18 @@ int main(int argc, char *argv[]) {
     }
     
     FILE* csvFile;
+
+    char csv_address[256];
+    strcpy(csv_address, "tests/");
+    strcat(csv_address, argv[2]);
+    strcat(csv_address, "_");
+    strcat(csv_address, argv[3]);
+    strcat(csv_address, "_");
+    strcat(csv_address, argv[4]);
+    strcat(csv_address, ".csv");
+
     // Ouvrir un fichier CSV pour l'écriture
-    csvFile = fopen("tests/output.csv", "w");
+    csvFile = fopen(csv_address, "w");
     if (csvFile == NULL) {
         fprintf(stderr, "Erreur : impossible de créer output.csv\n");
         return EXIT_FAILURE;
