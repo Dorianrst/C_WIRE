@@ -1,0 +1,17 @@
+# Cible principale - "all"
+# Cette cible, appelée par défaut lorsque vous exécutez "make", dépend de la cible "prog".
+# Elle s'assure que l'exécutable final est généré.
+all: prog
+
+
+# Règle pour générer le fichier objet main.o à partir de c_wire.c
+# Cette règle est exécutée lorsque c_wire.c ou setting.h est modifié.
+main.o: c_wire.c setting.h
+	gcc -c c_wire.c -o c_wire.o
+	# -c : Demande au compilateur de produire un fichier objet (c_wire.o).
+	# -o c_wire.o : Spécifie le nom du fichier objet de sortie.
+
+
+# Règle pour lier tous les fichiers objets (*.o) et produire l'exécutable "prog"
+prog: c_wire.o
+	gcc *.o -o prog

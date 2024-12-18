@@ -51,4 +51,8 @@ Avl* buildAvl(Avl* tree, char* station, char* type, int choice_pp, char* cpp, ch
 void writeToCsv(FILE *csvFile, int id, long capacity, long load);
 void writeAVLToCsv(Avl *node, FILE *csvFile);
 
+void writeIdAndLoadToCsv(FILE *csvFile, int id, long load);
+void writeAVLIdAndLoadToCsv(Avl *node, FILE *csvFile);
+
+
 #endif // SETTING_H
