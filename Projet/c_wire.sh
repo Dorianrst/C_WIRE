@@ -17,7 +17,7 @@
     # Ligne de séparation
     SEPARATOR="${CYAN}============================================${RESET}"
 
-    # Enregistrer le temps de début en secondes
+    
     
 
     # Chemins relatifs dynamiques
@@ -223,6 +223,7 @@
 
     argument_verification "$1" "$2" "$3"
     verification_temp_graph
+    # Enregistrer le temps de début en secondes
     start=$(date +%s)
     veriffication_for_executable "$@"
 
