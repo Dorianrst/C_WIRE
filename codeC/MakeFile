@@ -1,0 +1,16 @@
+all : c_wire
+
+
+c_wire.o : c_wire.c fonctions.h
+	gcc -c c_wire.c -o c_wire.o
+
+fonctions.o : fonctions.c fonctions.h
+	gcc -c fonctions.c -o fonctions.o
+
+
+c_wire : c_wire.o fonctions.o
+	gcc *.o -o c_wire
+
+
+clean :
+	rm -f *.o c_wire
