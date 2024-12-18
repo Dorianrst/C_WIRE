@@ -1,14 +1,14 @@
 CC = gcc
 
 
-SRCDIR = src
-INCDIR = include
-BINDIR = bin
+SRCDIR = src/C_WIRE-main
+INCDIR = include/setting.h
+BINDIR = bin/c_wire.exe
 
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 HEADERS = $(wildcard $(INCDIR)/*.h)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(BINDIR)/%.o, $(SOURCES))
-EXECUTABLE = $(BINDIR)/exeT
+EXECUTABLE = $(BINDIR)/c_wire.exe
 
 all: $(EXECUTABLE)
 
