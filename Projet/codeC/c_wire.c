@@ -204,7 +204,7 @@ void writeAVLToCsv(Avl *node, FILE *csvFile) {
 
 
 void writeForGraph(FILE *csvFile, int id, long load) {
-    fprintf(csvFile, "%d:%lu\n", id, load); // Format : id:load
+    fprintf(csvFile, "%d, %lu\n", id, load); // Format : id:load
 }
 
 void writeAVLForGraph(Avl* node, FILE* csvFile) {
@@ -426,7 +426,7 @@ int main(int argc, char *argv[]) {
     // Ouvrir un fichier CSV pour l'écriture
     csvFile = fopen(csv_address, "w");
     if (csvFile == NULL) {
-        fprintf(stderr, "Erreur : impossible de créer output.csv\n");
+        fprintf(stderr, "Erreur : impossible de créer le .csv\n");
         return EXIT_FAILURE;
     }
 
@@ -443,19 +443,10 @@ int main(int argc, char *argv[]) {
     // On créer un 2e fichier un peu différent afin de créer les graphiques plus tard
     FILE* csvGraph;
 
-    char graph_address[256];
-    strcpy(graph_address, "Graphs/");
-    strcat(graph_address, argv[2]);
-    strcat(graph_address, "_");
-    strcat(graph_address, argv[3]);
-    strcat(graph_address, "_");
-    strcat(graph_address, argv[4]);
-    strcat(graph_address, "_graph.csv");
-
     // Ouvrir un fichier CSV pour l'écriture
-    csvGraph = fopen(graph_address, "w");
+    csvGraph = fopen("Graphs/graphique.csv", "w");
     if (csvGraph == NULL) {
-        fprintf(stderr, "Erreur : impossible de créer output.csv\n");
+        fprintf(stderr, "Erreur : impossible de créer le graph.csv\n");
         return EXIT_FAILURE;
     }
 
