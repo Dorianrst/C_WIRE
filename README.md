@@ -43,7 +43,7 @@ sudo apt update && sudo apt upgrade
 ```
 You should see the installed version of GCC.
 
-## 🐧 **On Windows**
+##  💻 **On Windows**
 
 1. **Install MinGW (Minimalist GNU for Windows):**
     -Download the MinGW installer from the official site: MinGW-w64(https://sourceforge.net/projects/mingw/)
@@ -84,7 +84,7 @@ gnuplot 5.4 patchlevel 1
 ```
 ---
 
-# **On windows**
+#  💻**On windows**
 
 1. **Downoald gnuplot:**
     -Go to the official Gnuplot page: Gnuplot Downloads(https://sourceforge.net/projects/gnuplot/)
@@ -103,7 +103,7 @@ gnuplot 5.4 patchlevel 1
     -You should see the installed version of Gnuplot.
 
 ---
-## **How to Run the Program**
+## ▶️**How to Run the Program**
 **Step 1: Clone the Repository**
 
 -Retrieve the latest version of the project using Git:
@@ -150,7 +150,7 @@ bash SHELL/c_wire.sh c-wire_v25.dat hva comp 3
 ```
 
 ---
-## **Output**
+## 💾 **Output**
 
 - Data Analysis:
  Results are saved in a .csv file in the project root directory.
@@ -161,19 +161,34 @@ bash SHELL/c_wire.sh c-wire_v25.dat hva comp 3
 At the end of execution, the script also displays the total runtime in seconds.
 
 ---
-## **Projet Structure**
+## 🎵 **For Music**
+If you want to listen to some nice music, just run c_wire.c with no arguments!
+
+---
+
+## 📂**Projet Structure**
 
 The repository is organized as follows:
 ```bash
-C_WIRE/
-├── SHELL/
-│   ├── c_wire.sh          # Main Shell script to execute the program
-│   └── c-wire_v25.dat     # Input data file
-├── c_wire.c               # C source code for the analysis algorithm
-├── output.csv             # Output file containing analysis results
-├── Graphs/                # Directory for generated graphs
-├── temp/                  # Temporary working directory
-└── README.md              # Project documentation
+Cwire/
+├── codeC/
+│   ├── c_wire.c          # Fichier source C
+│   ├── c_wire.exe        # Exécutable compilé
+│   └── musique.mp3       # Fichier audio associé
+├── Input/
+│   └── c-wire_v00.dat    # Fichier de données d'entrée
+├── tests/                # Répertoire pour les tests (vide ou à remplir)
+├── c_wire.sh             # Script principal pour exécuter le projet
+├── graphique.gp          # Script Gnuplot pour les graphiques
+├── hva.gp                # Script Gnuplot spécifique à HVA
+├── lv_compagny.gp        # Script Gnuplot pour les compagnies LV
+├── lv.gp                 # Script Gnuplot pour LV
+├── lvb.gp                # Script Gnuplot pour LVB
+├── makefile              # Fichier de configuration Make
+├── projet.pdf            # Documentation du projet
+├── README.md             # Documentation générale du projet
+└── setting.h             # Fichier d'en-tête pour les paramètres
+
 ```
 
 ---
