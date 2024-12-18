@@ -1,25 +1,17 @@
-CC = gcc
+# Cible principale - "all"
+# Cette cible, appelée par défaut lorsque vous exécutez "make", dépend de la cible "prog".
+# Elle s'assure que l'exécutable final est généré.
+all: prog
 
 
-SRCDIR = src/C_WIRE-main
-INCDIR = include/setting.h
-BINDIR = bin/c_wire.exe
+# Règle pour générer le fichier objet main.o à partir de c_wire.c
+# Cette règle est exécutée lorsque c_wire.c ou setting.h est modifié.
+main.o: c_wire.c setting.h
+	gcc -c c_wire.c -o c_wire.o
+	# -c : Demande au compilateur de produire un fichier objet (c_wire.o).
+	# -o c_wire.o : Spécifie le nom du fichier objet de sortie.
 
-SOURCES = $(wildcard $(SRCDIR)/*.c)
-HEADERS = $(wildcard $(INCDIR)/*.h)
-OBJECTS = $(patsubst $(SRCDIR)/%.c, $(BINDIR)/%.o, $(SOURCES))
-EXECUTABLE = $(BINDIR)
 
-all: $(EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@ $(LFLAGS)
-
-$(BINDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
-	$(CC) -c $< -o $@
-
-run: $(EXECUTABLE)
-	$(EXECUTABLE)
-
-clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
+# Règle pour lier tous les fichiers objets (*.o) et produire l'exécutable "prog"
+prog: c-wire.o
+	gcc *.o -o prog
