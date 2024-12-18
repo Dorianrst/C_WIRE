@@ -13,5 +13,5 @@ main.o: c_wire.c setting.h
 
 
 # Règle pour lier tous les fichiers objets (*.o) et produire l'exécutable "prog"
-prog: c-wire.o
+prog: c_wire.o
 	gcc *.o -o prog
