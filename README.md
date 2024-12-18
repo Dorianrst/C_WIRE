@@ -173,22 +173,19 @@ The repository is organized as follows:
 Cwire/
 ├── codeC/
 │   ├── c_wire.c          # Fichier source C
-│   ├── c_wire.exe        # Exécutable compilé
+│   ├── c_wire.exe
+│   ├── fonctions.c
+│   ├── fonctions.h
+│   ├── MakeFile      # Exécutable compilé
 │   └── musique.mp3       # Fichier audio associé
 ├── Input/
 │   └── c-wire_v00.dat    # Fichier de données d'entrée
-├── tests/                # Répertoire pour les tests (vide ou à remplir)
+├── tests/ 
+│   └── lv_all_0.csv              # Répertoire pour les tests (vide ou à remplir)
 ├── c_wire.sh             # Script principal pour exécuter le projet
-├── graphique.gp          # Script Gnuplot pour les graphiques
-├── hva.gp                # Script Gnuplot spécifique à HVA
-├── lv_compagny.gp        # Script Gnuplot pour les compagnies LV
-├── lv.gp                 # Script Gnuplot pour LV
-├── lvb.gp                # Script Gnuplot pour LVB
-├── makefile              # Fichier de configuration Make
+├── graphique.gp          # Script Gnuplot pour les graphiques      
 ├── projet.pdf            # Documentation du projet
 ├── README.md             # Documentation générale du projet
-└── setting.h             # Fichier d'en-tête pour les paramètres
-
 ```
 
 ---
