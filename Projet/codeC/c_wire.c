@@ -179,6 +179,8 @@ void printAVL(Avl* node) {
 
 
 
+
+
 // Fonction pour écrire un nœud dans le fichier CSV
 void writeToCsv(FILE *csvFile, int id, long capacity, long load) {
     fprintf(csvFile, "%d:%lu:%lu\n", id, capacity, load);
@@ -197,6 +199,30 @@ void writeAVLToCsv(Avl *node, FILE *csvFile) {
         writeAVLToCsv(node->rightSon, csvFile);
     }
 }
+
+
+
+
+void writeForGraph(FILE *csvFile, int id, long load) {
+    fprintf(csvFile, "%d:%lu\n", id, load); // Format : id:load
+}
+
+void writeAVLForGraph(Avl* node, FILE* csvFile) {
+    if (node != NULL) {
+        // Ecriture récursive des nœuds gauche
+        writeAVLForGraph(node->leftSon, csvFile);
+
+        // Ecriture du nœud courant (ID + Load seulement)
+        writeForGraph(csvFile, node->id, node->load);
+
+        // Ecriture récursive des nœuds droit
+        writeAVLForGraph(node->rightSon, csvFile);
+    }
+}
+
+
+
+
 
 
 
@@ -289,6 +315,17 @@ Avl* buildAvl(Avl* tree, char* station, char* type, int choice_pp, char* cpp, ch
 
     return tree;
 }
+
+
+// Fonction pour libérer l'arbre AVL
+void freeAVL(Avl* node) {
+    if (node != NULL) {
+        freeAVL(node->leftSon);  // Libérer récursivement le sous-arbre gauche
+        freeAVL(node->rightSon); // Libérer récursivement le sous-arbre droit
+        free(node);              // Libérer le nœud courant
+    }
+}
+
 
 
 
@@ -394,23 +431,46 @@ int main(int argc, char *argv[]) {
     }
 
     // Écrire l'en-tête du fichier CSV
-    fprintf(csvFile, "ID,Capacity,Load\n");
-
+    fprintf(csvFile, "Station ID:Capacity:Load\n");
     // Parcourir l'AVL et écrire les données dans le CSV
     writeAVLToCsv(tree, csvFile);
-
     // Fermer le fichier CSV
     fclose(csvFile);
 
-    printf("Les données ont été exportées avec succès dans output.csv\n");
 
-    // close the file
+
+
+    // On créer un 2e fichier un peu différent afin de créer les graphiques plus tard
+    FILE* csvGraph;
+
+    char graph_address[256];
+    strcpy(graph_address, "Graphs/");
+    strcat(graph_address, argv[2]);
+    strcat(graph_address, "_");
+    strcat(graph_address, argv[3]);
+    strcat(graph_address, "_");
+    strcat(graph_address, argv[4]);
+    strcat(graph_address, "_graph.csv");
+
+    // Ouvrir un fichier CSV pour l'écriture
+    csvGraph = fopen(graph_address, "w");
+    if (csvGraph == NULL) {
+        fprintf(stderr, "Erreur : impossible de créer output.csv\n");
+        return EXIT_FAILURE;
+    }
+
+    // Parcourir l'AVL et écrire les données dans le CSV
+    writeAVLForGraph(tree, csvGraph);
+    // Fermer le fichier écrit pour les Graphiques
+    fclose(csvGraph);
+
+
+
+    // close the principal file
     fclose(file);
 
-    end = clock();    // Arrêter le chronomètre
-
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; // Calculer le temps utilisé
-    printf("Temps d'execution: %.3f secondes\n", cpu_time_used);
+    printf("Les données ont été exportées avec succès dans output.csv\n");
+    freeAVL(tree);
 
     return EXIT_SUCCESS;
 }
