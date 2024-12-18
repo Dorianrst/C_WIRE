@@ -8,7 +8,7 @@ BINDIR = bin/c_wire.exe
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 HEADERS = $(wildcard $(INCDIR)/*.h)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(BINDIR)/%.o, $(SOURCES))
-EXECUTABLE = $(BINDIR)/c_wire.exe
+EXECUTABLE = $(BINDIR)
 
 all: $(EXECUTABLE)
 
