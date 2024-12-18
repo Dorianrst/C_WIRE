@@ -26,7 +26,7 @@ sudo apt update && sudo apt upgrade
 
 ---
 
-## 🐧 **On Linux (Ubuntu/Debian)**
+# 🐧 **On Linux (Ubuntu/Debian)**
 
 1. **Update your package list:**
    ```bash
@@ -43,7 +43,7 @@ sudo apt update && sudo apt upgrade
 ```
 You should see the installed version of GCC.
 
-##  💻 **On Windows**
+#  💻 **On Windows**
 
 1. **Install MinGW (Minimalist GNU for Windows):**
     -Download the MinGW installer from the official site: MinGW-w64(https://sourceforge.net/projects/mingw/)
@@ -104,7 +104,7 @@ gnuplot 5.4 patchlevel 1
 
 ---
 ## ▶️**How to Run the Program**
-**Step 1: Clone the Repository**
+# **Step 1: Clone the Repository**
 
 -Retrieve the latest version of the project using Git:
 
@@ -114,13 +114,13 @@ gnuplot 5.4 patchlevel 1
     cd C_WIRE
 
     ```
-**Step 2: Execute the Program**
+# **Step 2: Execute the Program**
 
 -Run the Shell script with the required parameters:
 ```bash
 bash SHELL/c_wire.sh <Data_file> <station_type> <consumer_type> [ID]
 ```
-**Parameters:**
+# **Parameters:**
 
 -<Data_file>: The name of the file containing the data:
     c-wire_v25.dat
@@ -138,7 +138,7 @@ bash SHELL/c_wire.sh <Data_file> <station_type> <consumer_type> [ID]
 -[ID] (Optional): Specific Station ID (1 to 5). If omitted, all stations will be processe
 
 ---
-## **Exemple usage**
+# **Exemple usage**
 
 -To process all stations of type hvb for individual consumers:
 ```bash
