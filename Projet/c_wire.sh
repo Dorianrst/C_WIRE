@@ -18,7 +18,7 @@
     SEPARATOR="${CYAN}============================================${RESET}"
 
     # Enregistrer le temps de début en secondes
-    start=$(date +%s)
+    
 
     # Chemins relatifs dynamiques
     SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -223,6 +223,7 @@
 
     argument_verification "$1" "$2" "$3"
     verification_temp_graph
+    start=$(date +%s)
     veriffication_for_executable "$@"
 
     # Enregistrer le temps de fin en secondes
