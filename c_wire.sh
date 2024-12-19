@@ -1,31 +1,31 @@
 #!/bin/bash
-# Couleurs
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 RESET='\033[0m'
-# Icônes
+# Icons
 OK="${GREEN}✔️${RESET}"
 ERROR="${RED}❌${RESET}"
 INFO="${CYAN}ℹ️${RESET}"
 ARROW="${BLUE}➡️${RESET}"
-# Ligne de séparation
+# Dividing Line
 SEPARATOR="${CYAN}============================================${RESET}"
-# Enregistrer le temps de début en secondes
+# Record start time in seconds
 start=$(date +%s)
-# Chemins relatifs dynamiques
+# Dynamic relative paths
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
 DATA_FILE="$SCRIPT_DIR/Input/c-wire_v00.dat"
 EXECUTABLE="$SCRIPT_DIR/CodeC/c_wire"
 OUTPUT_FILE="$PROJECT_DIR/output.csv"
-# Fonction pour nettoyer les espaces autour d'une chaîne
+# Function for cleaning the spaces around a chain
 trim() {
     echo "$1" | xargs
 }
-# Fonction d'aide
+# Help function
 function_help() {
     echo -e "${SEPARATOR}"
     echo -e "${INFO} Usage : $0 <station_type> <consumer_type> [ID] [-h]"
