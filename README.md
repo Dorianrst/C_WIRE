@@ -11,6 +11,7 @@ Before running this program, ensure you have the following tools installed on yo
 - **GCC Compiler**: Required to compile the C program.
 - **Gnuplot**: To generate graphs for visualizing the processed data.
 - **Git**: To retrieve the latest version of the code.
+- **Makefile** : Check that the tools for using a makefile are installed
 
 ## Installation
 
@@ -20,7 +21,7 @@ To install the necessary tools and ensure your system is up-to-date, run the fol
 sudo apt update && sudo apt upgrade
  ```
 ---
-# 🛠️ **Installing GCC Compiler**
+## 🛠️ **Installing GCC Compiler**
 
 **GCC (GNU Compiler Collection)** is a set of compilers for different programming languages, including C. This section explains how to install GCC on different operating systems and how to verify its installation.
 
@@ -107,6 +108,74 @@ gnuplot 5.4 patchlevel 1
 -Then load ‘graphique.gp’ and a png with our graph will appear in the Graphs folder.
 
 ---
+## 🔗✨ **How to recover our files from git**
+
+1. # **Install Git**
+
+    **On Linux**
+    ```bash
+    sudo apt update
+    sudo apt install git
+    ```
+    **On Windows**
+    -Download git via this link :https://git-scm.com/
+2. # **Clone the git repository**
+
+    **1. Find the git repository url**
+
+        -If the repository is on a platform such as GitHub, GitLab or Bitbucket, retrieve the HTTPS or SSH URL. For example :
+        -HTTPS : https://github.com/utilisateur/projet.git
+        -SSH : git@github.com:utilisateur/projet.git
+
+     **2.Exécutez la commande git clone**
+
+        -Navigate to the directory where you want to clone the repository:
+
+        ```bash
+        cd /Path/to/folders
+        ```
+        -Clone the repository:
+    
+        ```bash
+        git clone https://github.com/utilisateur/projet.git
+        ```
+        -Or, if you use SSH :
+    
+        ```bash 
+        git clone git@github.com:utilisateur/projet.git
+        ```
+3. # **Access the cloned directory :**
+        ```bash
+        cd projet
+        ```
+
+4. # **Update the local repository**
+
+    **1. Pulling changes from the remote repository**
+    ```bash
+    git pull
+    ```
+    **2. Check the condition of your local depot:**
+    ```bash
+    git status
+    ```
+
+
+---
+
+## 📄 **How to install a makefile**
+
+# 🐧 **On Linux (Ubuntu/Debian)**
+    ```bash
+    sudo apt update
+    sudo apt install make
+    ```
+
+#  💻 **On Windows**
+-Install make via MinGW or Cygwin, or use an environment such as WSL (Windows Subsystem for Linux).
+
+---
+
 ## ▶️**How to Run the Program**
 # **Step 1: Clone the Repository**
 
