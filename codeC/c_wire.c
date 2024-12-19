@@ -1,9 +1,9 @@
 #include "fonctions.h"
 
+int main(int argc, char *argv[])
+{
 
-int main(int argc, char *argv[]) {
-
-    // Affichage de l'ASCII Art en rouge
+    // ASCII Art displayed in red
     printf("\033[1;31m"); // Rouge en gras
     printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. \n");
     printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n");
@@ -15,14 +15,13 @@ int main(int argc, char *argv[]) {
     printf("| |              | || |  |_______|   | || |              | || |              | || |              | || |              | |\n");
     printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n");
     printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
-    printf("\033[0m"); // Réinitialiser les couleurs
+    printf("\033[0m"); // Reset colours
 
-    
     clock_t start, end;
     double cpu_time_used;
-    start = clock();  // Démarrer le chronomètre
+    start = clock(); // Start the stopwatch
 
-    FILE* file;
+    FILE *file;
     char line[256];
     // strcpy( fullName, firstName );
     char file_address[256];
@@ -30,34 +29,32 @@ int main(int argc, char *argv[]) {
     strcat(file_address, argv[1]);
 
     char *cpp, *chvb, *chva, *clv, *ccomp, *cindiv, *ccapa, *cload;
-    
 
     int pp, hvb, hva, lv, comp, indiv, capa, load;
-    char* station = argv[2];
-    char* type = argv[3];
+    char *station = argv[2];
+    char *type = argv[3];
 
     int choice_pp = atoi(argv[4]);
 
-    if(choice_pp < 0 || choice_pp > 5){
+    if (choice_pp < 0 || choice_pp > 5)
+    {
         choice_pp = 0;
     }
 
-    
-    
-    Avl* tree = NULL;
-    
-    
+    Avl *tree = NULL;
+
     // Open the file
     file = fopen(file_address, "r");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("Error while opening file\n");
         exit(2);
     }
 
-    fgets(line, sizeof(line), file); // Pour passer la première ligne du document
-
+    fgets(line, sizeof(line), file); //  To skip the first line of the document
     // read each line
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line, sizeof(line), file))
+    {
 
         // delete line jump
         line[strcspn(line, "\n")] = '\0';
@@ -71,11 +68,11 @@ int main(int argc, char *argv[]) {
         cindiv = strtok(NULL, ";");
         ccapa = strtok(NULL, ";");
         cload = strtok(NULL, ";");
-        //printf("%s %s %s %s %s %s %s %s\n", cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
+        // printf("%s %s %s %s %s %s %s %s\n", cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
         tree = buildAvl(tree, station, type, choice_pp, cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
     }
-    
-    FILE* csvFile;
+
+    FILE *csvFile;
 
     char csv_address[256];
     strcpy(csv_address, "tests/");
@@ -86,39 +83,38 @@ int main(int argc, char *argv[]) {
     strcat(csv_address, argv[4]);
     strcat(csv_address, ".csv");
 
-    // Ouvrir un fichier CSV pour l'écriture
+    // Open a CSV file for writing
     csvFile = fopen(csv_address, "w");
-    if (csvFile == NULL) {
+    if (csvFile == NULL)
+    {
         fprintf(stderr, "Erreur : impossible de créer le .csv\n");
         return EXIT_FAILURE;
     }
 
-    // Écrire l'en-tête du fichier CSV
+    // Write the CSV file header
+
     fprintf(csvFile, "Station ID:Capacity:Load\n");
-    // Parcourir l'AVL et écrire les données dans le CSV
+    // Browse the AVL and write the data to the CSV
     writeAVLToCsv(tree, csvFile);
-    // Fermer le fichier CSV
+    // Close CSV file
     fclose(csvFile);
 
+    // Create a 2nd, slightly different file to create the graphics later.
 
+    FILE *csvGraph;
 
-
-    // On créer un 2e fichier un peu différent afin de créer les graphiques plus tard
-    FILE* csvGraph;
-
-    // Ouvrir un fichier CSV pour l'écriture
+    // Open a CSV file for writing
     csvGraph = fopen("Graphs/graphique.csv", "w");
-    if (csvGraph == NULL) {
+    if (csvGraph == NULL)
+    {
         fprintf(stderr, "Erreur : impossible de créer le graph.csv\n");
         return EXIT_FAILURE;
     }
 
-    // Parcourir l'AVL et écrire les données dans le CSV
+    // Browse the AVL and write the data to the CSV
     writeAVLForGraph(tree, csvGraph);
-    // Fermer le fichier écrit pour les Graphiques
+    // Close the file written for Graphics
     fclose(csvGraph);
-
-
 
     // close the principal file
     fclose(file);

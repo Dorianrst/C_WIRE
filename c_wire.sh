@@ -1,5 +1,4 @@
-   #!/bin/bash
-
+#!/bin/bash
 # Couleurs
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -7,31 +6,25 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 RESET='\033[0m'
-
 # Icônes
 OK="${GREEN}✔️${RESET}"
 ERROR="${RED}❌${RESET}"
 INFO="${CYAN}ℹ️${RESET}"
 ARROW="${BLUE}➡️${RESET}"
-
 # Ligne de séparation
 SEPARATOR="${CYAN}============================================${RESET}"
-
 # Enregistrer le temps de début en secondes
 start=$(date +%s)
-
 # Chemins relatifs dynamiques
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
 DATA_FILE="$SCRIPT_DIR/Input/c-wire_v00.dat"
 EXECUTABLE="$SCRIPT_DIR/CodeC/c_wire"
 OUTPUT_FILE="$PROJECT_DIR/output.csv"
-
 # Fonction pour nettoyer les espaces autour d'une chaîne
 trim() {
     echo "$1" | xargs
 }
-
 # Fonction d'aide
 function_help() {
     echo -e "${SEPARATOR}"
@@ -140,13 +133,26 @@ veriffication_for_executable() {
     make all
     # Vérifier si la commande make a échoué
     if [ $? -ne 0 ]; then
-        echo "${ERROR} Erreur lors de la compilation."
+        echo "${ERROR} Erreur lors de la compilation dans le Makefile."
         exit 6
     else
         echo "${ARROW} Compilation réussie !"
     fi
-    
+
     cd ..
+
+    #if [ ! -f "$source_file" ]; then
+    #    echo -e "${ERROR} Le fichier source '$source_file' est introuvable."
+    #    exit 5
+    #fi
+
+    # Compiler le fichier source en exécutable
+    #gcc -mconsole "$source_file" -o "$executable"
+    #if [ $? -ne 0 ]; then
+    #    echo -e "${ERROR} La compilation de '$source_file' a échoué."
+    #    exit 6
+    #fi
+    #echo -e "${OK} Compilation réussie. Exécutable créé : '$executable'."
 
     # Exécuter l'exécutable avec les arguments fournis
     echo "Exécution de '$executable' avec les arguments : $@"
