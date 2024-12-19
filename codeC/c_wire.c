@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     csvFile = fopen(csv_address, "w");
     if (csvFile == NULL)
     {
-        fprintf(stderr, "Erreur : impossible de créer le .csv\n");
+        fprintf(stderr, "Error: unable to create .csv file\n");
         return EXIT_FAILURE;
     }
 
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     csvGraph = fopen("Graphs/graphique.csv", "w");
     if (csvGraph == NULL)
     {
-        fprintf(stderr, "Erreur : impossible de créer le graph.csv\n");
+        fprintf(stderr, "Error: unable to create graph.csv file\n");
         return EXIT_FAILURE;
     }
 
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
     // close the principal file
     fclose(file);
 
-    printf("Les données ont été exportées avec succès dans output.csv\n");
+    printf("The data has been successfully exported to output.csv\n");
     freeAVL(tree);
 
     return EXIT_SUCCESS;
