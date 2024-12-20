@@ -18,15 +18,7 @@ int main(int argc, char *argv[])
     printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
     printf("\033[0m"); // Reset colours
 
-	/*
-     // Lancer le fichier audio en arrière-plan
-        if (system("start /min musique.mp3") != 0) {
-            printf("Erreur : impossible de lancer musique.mp3 car vous n'avez surement pas bien mis le fichiers .mp3 il faut qu'il soit au meme endroit que c_wire.exe\n");
-        } else {
-            printf("Musique lancée en arrière-plan !\n");
-        }
 
-	*/
     FILE *file;
     char line[256];
     // strcpy( fullName, firstName );
@@ -80,6 +72,9 @@ int main(int argc, char *argv[])
         tree = buildAvl(tree, station, type, choice_pp, cpp, chvb, chva, clv, ccomp, cindiv, ccapa, cload);
     }
 
+    Avl* newTree = NULL; // Nouvel arbre AVL vide
+    newTree = sortAvlByCapacity(tree, newTree); // Remplir le nouvel arbre
+
     FILE *csvFile;
 
     // We write the name of the future document with the arguments
@@ -106,7 +101,7 @@ int main(int argc, char *argv[])
 
     fprintf(csvFile, "Station ID:Capacity:Load\n");
     // Browse the AVL and write the data to the CSV
-    writeAVLToCsv(tree, csvFile);
+    writeAVLToCsv(newTree, csvFile);
     // Close CSV file
     fclose(csvFile);
 
@@ -122,7 +117,7 @@ int main(int argc, char *argv[])
     }
 
     // Browse the AVL and write the data to the CSV
-    writeAVLForGraph(tree, csvGraph);
+    writeAVLForGraph(newTree, csvGraph);
     // Close the file written for Graphics
     fclose(csvGraph);
 
@@ -131,6 +126,7 @@ int main(int argc, char *argv[])
 
     printf("The data has been successfully exported to %s\n", csv_address);
     freeAVL(tree);
+    freeAVL(newTree);
 
     return 0;
 }
