@@ -13,8 +13,7 @@ typedef struct Avl{
     int balance;
     long capacity;
     int id;
-    unsigned long load;
-    long difference;
+    long load;
 }Avl;
 
 /*
