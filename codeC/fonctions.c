@@ -174,7 +174,7 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
 }
 
 
-// Nouvelle fonction insert basée sur les capacités
+// New insert function based on capacity instead of the ID
 Avl* insertAvlByCapacity(Avl* a, unsigned long capacity, long load, int id, int* h)
 {
     if (a == NULL)
@@ -193,8 +193,8 @@ Avl* insertAvlByCapacity(Avl* a, unsigned long capacity, long load, int id, int*
         a->rightSon = insertAvlByCapacity(a->rightSon, capacity, load, id, h);
     }
     else
-    { // Si les capacités sont identiques, utilisez un critère secondaire
-        if (id < a->id) // Comparaison par ID
+    { // If capacities are the same, we use the ID to sort
+        if (id < a->id) // Comparison by ID
         {
             a->leftSon = insertAvlByCapacity(a->leftSon, capacity, load, id, h);
             *h = -*h;
@@ -205,7 +205,7 @@ Avl* insertAvlByCapacity(Avl* a, unsigned long capacity, long load, int id, int*
         }
         else
         {
-            *h = 0; // Élément déjà présent
+            *h = 0; // Element already in the AVL
             return a;
         }
     }
@@ -230,17 +230,17 @@ Avl* insertAvlByCapacity(Avl* a, unsigned long capacity, long load, int id, int*
 Avl* sortAvlByCapacity(Avl* tree, Avl* newTree)
 {
     if (tree == NULL) {
-        return newTree; // Arbre vide ou fin du parcours
+        return newTree; // Empty tree or end of the function
     }
     int h = 0;
 
-    // Parcours gauche
+    // Recursive writing of left-hand nodes
     newTree = sortAvlByCapacity(tree->leftSon, newTree);
 
-    // Insertion du nœud actuel dans le nouvel arbre trié par capacité
+    // Inserting the current node into the new tree
     newTree = insertAvlByCapacity(newTree, tree->capacity, tree->load, tree->id, &h);
 
-    // Parcours droit
+    // Recursive writing of right-hand nodes
     newTree = sortAvlByCapacity(tree->rightSon, newTree);
 
     return newTree;
@@ -249,7 +249,7 @@ Avl* sortAvlByCapacity(Avl* tree, Avl* newTree)
 
 
 /*
-Cette partie du code n'est pas lancé car la partie sur la création du fichier lv_all_minmax.csv ne fonctionne pas et n'est pas terminé
+This part of the code is not launched because the part about creating the lv_all_minmax.csv file is not working and is not finished
 
 
 
