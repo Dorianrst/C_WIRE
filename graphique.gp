@@ -29,7 +29,7 @@ set style data histograms
 set style histogram rowstacked  # Les barres sont empilées
 
 # Format des données CSV
-set datafile separator ":"  # Séparateur par virgule
+set datafile separator ":"  # Séparateur par point
 
 # Indiquer des légendes pour les colonnes
 set key autotitle columnheader
