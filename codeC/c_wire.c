@@ -18,6 +18,14 @@ int main(int argc, char *argv[])
     printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
     printf("\033[0m"); // Reset colours
 
+    /*
+    // Lancer le fichier audio en arrière-plan
+    if (system("start /min musique.mp3") != 0) {
+        printf("Erreur : impossible de lancer musique.mp3 car vous n'avez surement pas bien mis le fichiers .mp3 il faut qu'il soit au meme endroit que c_wire.exe\n");
+    } else {
+        printf("Musique lancée en arrière-plan !\n");
+    }
+    */
 
     FILE *file;
     char line[256];
