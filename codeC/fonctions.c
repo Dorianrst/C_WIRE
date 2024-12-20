@@ -45,6 +45,15 @@ Avl *createAVL(long capacity, int id)
     return new;
 }
 
+Avl *createAVL2(long capacity, long load, int id)
+{
+    Avl *new = createNode();
+    new->capacity = capacity;
+    new->load = load;
+    new->id = id;
+    return new;
+}
+
 // Get the height of a node
 int getBalance(Avl *node)
 {
@@ -164,8 +173,84 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
     return a;
 }
 
+
+// Nouvelle fonction insert basée sur les capacités
+Avl* insertAvlByCapacity(Avl* a, long capacity, long load, int id, int* h)
+{
+    if (a == NULL)
+    {           // If the tree is empty, create a new node
+        *h = 1; // The height has increased
+        return createAVL2(capacity, load, id);
+    }
+    else if (capacity < a->capacity)
+    { // If the element is smaller, insert on the left
+        a->leftSon = insertAvlByCapacity(a->leftSon, capacity, load, id, h);
+        *h = -*h; // Reverses the impact of height
+    }
+    else if (capacity > a->capacity)
+    { // If the element is larger, insert to the right
+        a->rightSon = insertAvlByCapacity(a->rightSon, capacity, load, id, h);
+    }
+    else
+    { // Si les capacités sont identiques, utilisez un critère secondaire
+        if (id < a->id) // Comparaison par ID
+        {
+            a->leftSon = insertAvlByCapacity(a->leftSon, capacity, load, id, h);
+            *h = -*h;
+        }
+        else if (id > a->id)
+        {
+            a->rightSon = insertAvlByCapacity(a->rightSon, capacity, load, id, h);
+        }
+        else
+        {
+            *h = 0; // Élément déjà présent
+            return a;
+        }
+    }
+
+    // Updating the balance factor and rebalancing if necessary
+    if (*h != 0)
+    {
+        a->balance += *h;
+        a = balanceAVL(a);
+        if (a->balance == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
+    }
+    return a;
+}
+
+Avl* sortAvlByCapacity(Avl* tree, Avl* newTree)
+{
+    if (tree == NULL) {
+        return newTree; // Arbre vide ou fin du parcours
+    }
+    int h = 0;
+
+    // Parcours gauche
+    newTree = sortAvlByCapacity(tree->leftSon, newTree);
+
+    // Insertion du nœud actuel dans le nouvel arbre trié par capacité
+    newTree = insertAvlByCapacity(newTree, tree->capacity, tree->load, tree->id, &h);
+
+    // Parcours droit
+    newTree = sortAvlByCapacity(tree->rightSon, newTree);
+
+    return newTree;
+}
+
+
+
+
 // We check the arguments
-void checkStation(char* station){
+void checkStation(char* station)
+{
     if(strcmp("hvb", station) != 0 && strcmp("hva", station) != 0 && strcmp("lv", station) != 0){
         printf("Invalid station type. Allowed values: hvb, hva, lv.\n");
         exit(2);
@@ -174,7 +259,8 @@ void checkStation(char* station){
 
 
 // We check the type variable
-void checkType(char* type, char* station){
+void checkType(char* type, char* station)
+{
     if(strcmp("all", type) != 0 && strcmp("comp", type) != 0 && strcmp("indiv", type) != 0)
     {
 		printf("Invalid consumer type. Allowed values: comp, indiv, all.\n");
@@ -192,7 +278,8 @@ void checkType(char* type, char* station){
 	}
 }
 
-int checkChoicePp(char* arg, int choice_pp){
+int checkChoicePp(char* arg, int choice_pp)
+{
     if(arg != NULL) // The choice of the power station has been made
     { 
 		if(atoi(arg) < 0 || atoi(arg) > 5)
@@ -232,9 +319,9 @@ void writeAVLToCsv(Avl *node, FILE *csvFile)
     }
 }
 
-void writeForGraph(FILE *csvFile, int id, long load, long capacity)
+void writeForGraph(FILE *csvFile, int id, long load)
 {
-    fprintf(csvFile, "%d, %lu , %lu \n", id, load, capacity); // Format : id:load
+    fprintf(csvFile, "%d, %lu\n", id, load); // Format : id:load
 }
 
 void writeAVLForGraph(Avl *node, FILE *csvFile)
@@ -245,7 +332,7 @@ void writeAVLForGraph(Avl *node, FILE *csvFile)
         writeAVLForGraph(node->leftSon, csvFile);
 
         // Write current node (ID + Load only)
-        writeForGraph(csvFile, node->id, node->load, node->capacity);
+        writeForGraph(csvFile, node->id, node->load);
 
         // Recursive writing of right-hand nodes
         writeAVLForGraph(node->rightSon, csvFile);
@@ -285,6 +372,24 @@ void updateStation(Avl *tree, long load, int id)
 
     station->load += load;
 }
+
+
+// Fonction pour afficher un AVL sans indentation
+void printAVL(Avl* node) {
+    if (node == NULL) {
+        return;
+    }
+
+    // Parcours du sous-arbre gauche
+    printAVL(node->leftSon);
+
+    // Affichage du nœud courant
+    printf("ID: %d | Capacity: %lu | Load: %lu\n", node->id, node->capacity, node->load);
+
+    // Parcours du sous-arbre droit
+    printAVL(node->rightSon);
+}
+
 
 Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload)
 {
