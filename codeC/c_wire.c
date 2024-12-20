@@ -18,14 +18,6 @@ int main(int argc, char *argv[])
     printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
     printf("\033[0m"); // Reset colours
 
-    /*
-    // Lancer le fichier audio en arrière-plan
-    if (system("start /min musique.mp3") != 0) {
-        printf("Erreur : impossible de lancer musique.mp3 car vous n'avez surement pas bien mis le fichiers .mp3 il faut qu'il soit au meme endroit que c_wire.exe\n");
-    } else {
-        printf("Musique lancée en arrière-plan !\n");
-    }
-    */
 
     FILE *file;
     char line[256];
@@ -147,9 +139,9 @@ int main(int argc, char *argv[])
     }
 
     
-    fprintf(csvFile, "Station ID:Capacity:Load, Stations are sorted by capacity in ascending order\n");
+    fprintf(csvFile, "Station ID:Capacity:Load\n");
     // Browse the AVL and write the data to the CSV
-    writeAVLToCsv(tree, csvGraph); // We use the non sorted AVL for the graphics
+    writeAVLToCsv(newTree, csvGraph); // We use the non sorted AVL for the graphics
     // Close the file written for Graphics
     fclose(csvGraph);
 
