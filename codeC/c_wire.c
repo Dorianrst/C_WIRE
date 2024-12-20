@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
     // We sort a new tree by capacity to write the file later
     Avl* newTree = NULL;
-    newTree = sortAvlByCapacity(tree, newTree); // Remplir le nouvel arbre
+    newTree = sortAvlByCapacity(tree, newTree); // Fill the new tree according to capacity
 
     FILE *csvFile;
 
@@ -115,8 +115,8 @@ int main(int argc, char *argv[])
 
 
     /*
-    Ce code n'est pas exécuter car non fonctionnel et non terminé
-    Il correspond à la création du fichier lv_all_minmax.csv
+    This code is not executed because it is not functional and not finished
+    It corresponds to the creation of the file lv_all_minmax.csv
 
     // Allocation des tableaux pour les résultats
     const int maxResults = 10;
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     int minSize = 0;
     int maxSize = 0;
 
-    // Trouver les ratios extrêmes
+    // Trouver les extrêmes
     findExtremeRatios(tree, minArray, &minSize, maxArray, &maxSize, maxResults);
 
     // Écrire les résultats dans un fichier CSV
