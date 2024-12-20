@@ -13,7 +13,7 @@ typedef struct Avl{
     int balance;
     long capacity;
     int id;
-    long load;
+    unsigned long load;
 }Avl;
 
 
@@ -31,6 +31,8 @@ Avl* doubleRotateLeft(Avl* node);
 Avl* doubleRotateRight(Avl* node);
 Avl* equilibrerAVL(Avl* a);
 Avl* insertAVL(Avl* a, long capacity, int id,  int *h);
+Avl* insertAvlByCapacity(Avl* a, long capacity, long load, int id, int* h);
+Avl* sortAvlByCapacity(Avl* tree, Avl* newTree);
 
 void checkStation(char* station);
 void checkType(char* type, char* station);
@@ -45,6 +47,8 @@ int research(Avl* node, int id, Avl** searched);
 void updateStation(Avl* tree, long load, int id);
 Avl* buildAvl(Avl* tree, char* station, char* type, int choice_pp, char* cpp, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload);
 void freeAVL(Avl* node);
+
+void printAVL(Avl* node);
 
 int main(int argc, char *argv[]);
 
