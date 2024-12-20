@@ -102,7 +102,7 @@ gnuplot 5.4 patchlevel 1
     gnuplot --version
     ```
     -You should see the installed version of Gnuplot.
-**To launch the graph**
+5. **To launch the graph**
 
 -Click on file at the top left, then on change directory and enter the main folder so that it finds our .gp file to launch the execution of the graph
 -Then load ‘graphique.gp’ and a png with our graph will appear in the Graphs folder.
