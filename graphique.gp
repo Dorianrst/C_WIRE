@@ -6,7 +6,7 @@ set style fill solid 0.7 border -1  # Barres semi-transparentes
 
 # Titre et axes du graphique
 set title "Graphique à barres - Répartition des Capacités et Charges" font "Arial Bold,16"
-set xlabel "Stations" font "Arial,14"
+set xlabel "Numéro de stations" font "Arial,14"
 set ylabel "Load (kWh)" font "Arial,14"  # Axe Y avec l'unité kWh
 
 # Configuration de la grille
