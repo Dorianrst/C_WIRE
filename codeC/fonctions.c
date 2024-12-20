@@ -34,7 +34,6 @@ Avl *createNode()
     new->capacity = 0;
     new->id = 0;
     new->load = 0;
-    new->difference = 0;
     return new;
 }
 
