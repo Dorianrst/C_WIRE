@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
     // Write the CSV file header
     fprintf(csvFile, "Station ID:Capacity:Load, Stations are sorted by capacity in ascending order\n");
-    // Browse the AVL and write the data to the CSV
+    // Browse the AVL and write the data to the CSV with the AVL sorted by capacity
     writeAVLToCsv(newTree, csvFile);
     // Close CSV file
     fclose(csvFile);
