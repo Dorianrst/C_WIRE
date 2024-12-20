@@ -19,8 +19,7 @@ start=$(date +%s)
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
 DATA_FILE="$SCRIPT_DIR/Input/c-wire_v00.dat"
-EXECUTABLE="$SCRIPT_DIR/CodeC/c_wire"
-OUTPUT_FILE="$PROJECT_DIR/output.csv"
+EXECUTABLE="$SCRIPT_DIR/codeC/c_wire"
 # Function for cleaning the spaces around a chain
 trim() {
     echo "$1" | xargs
@@ -96,8 +95,8 @@ argument_verification() {
 veriffication_for_executable() {
     local script_dir=$(dirname "$0")                # Directory containing the script
     local project_dir="$script_dir/.."              # Project root directory
-    local source_file="$SCRIPT_DIR/CodeC/c_wire.c"  # Source file
-    local executable="$SCRIPT_DIR/CodeC/c_wire.exe" # Executable
+    local source_file="$script_dir/codeC/c_wire.c"  # Source file
+    local executable="$script_dir/codeC/c_wire" # Executable
 
     # Check if the executable exists
     if [ -f "$executable" ]; then
@@ -129,19 +128,6 @@ veriffication_for_executable() {
 
     cd ..
 
-    #if [ ! -f "$source_file" ]; then
-    #    echo -e "${ERROR} Le fichier source '$source_file' est introuvable."
-    #    exit 5
-    #fi
-
-    # Compiler le fichier source en exécutable
-    #gcc -mconsole "$source_file" -o "$executable"
-    #if [ $? -ne 0 ]; then
-    #    echo -e "${ERROR} La compilation de '$source_file' a échoué."
-    #    exit 6
-    #fi
-    #echo -e "${OK} Compilation réussie. Exécutable créé : '$executable'."
-
     # Run the executable with the arguments supplied
     echo "Running '$executable' with : $@"
     "$executable" "$@"
@@ -150,7 +136,7 @@ veriffication_for_executable() {
         exit 7
     fi
 
-    echo "Successful execution. Results saved in '$project_dir/output.csv'."
+    echo "Successful execution. Results saved in '$project_dir/tests/'."
 }
 
 # Placeholder to treat all stations
@@ -229,7 +215,7 @@ fi
 echo -e "${SEPARATOR}"
 echo -e "${INFO} Start argument verification..."
 
-argument_verification "$1" "$2" "$3"
+argument_verification "$1" "$2" "$3" "$4"
 verification_temp_graph
 veriffication_for_executable "$@"
 
