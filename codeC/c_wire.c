@@ -34,47 +34,12 @@ int main(int argc, char *argv[])
         return 1;
 	}
 	char* station = argv[2];
-	if(strcmp("hvb", station) != 0 && strcmp("hva", station) != 0 && strcmp("lv", station) != 0){
-		printf("Invalid station type. Allowed values: hvb, hva, lv.\n");
-        return 2;
-	}
+    checkStation(station);
 	
     char* type = argv[3];
-    // We check the type variable
-    if(strcmp("all", type) != 0 && strcmp("comp", type) != 0 && strcmp("indiv", type) != 0)
-    {
-		printf("Invalid consumer type. Allowed values: comp, indiv, all.\n");
-        return 2;
-	}
-	else if(strcmp("hvb", station) == 0 && strcmp("comp", type) != 0)
-    {
-		printf("The ‘all’ and ‘indiv’ options are prohibited for HV-B and HV-A stations.\n");
-        return 2;
-	}
-	else if(strcmp("hva", station) == 0 && strcmp("comp", type) != 0)
-    {
-		printf("The ‘all’ and ‘indiv’ options are prohibited for HV-B and HV-A stations.\n");
-        return 2;
-	}
+    checkType(type, station);
     
-    int choice_pp = 0;
-
-    if(argv[4] != NULL) // The choice of the power station has been made
-    { 
-    	printf("Le choix de la centrale a été rentré\n");
-        choice_pp = atoi(argv[4]);
-    	
-		if(choice_pp < 0 || choice_pp > 5)
-        {
-			printf("Le numéro de centrale rentré n'est pas bon, on va prendre toutes les centrales.\n");
-		    choice_pp = 0;
-		}
-    }
-    else // So if the argument is not here, we take all the power stations.
-    { 
-        printf("Le numéro de centrale n'est pas rentré, on va prendre toutes les centrales.\n");
-    	choice_pp = 0;
-    }
+    int choice_pp = checkChoicePp(argv[4], choice_pp);
 
     Avl *tree = NULL;
 
@@ -161,3 +126,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
