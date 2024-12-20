@@ -13,9 +13,19 @@ typedef struct Avl{
     int balance;
     long capacity;
     int id;
-    long load;
+    unsigned long load;
+    long difference;
 }Avl;
 
+/*
+// Structure pour stocker les résultats pour min et max
+typedef struct ResultNode {
+    int id;
+    long capacity;
+    long load;
+    long ratio; // capacity - load
+} ResultNode;
+*/
 
 int min(int a, int b);
 int max(int a, int b);
@@ -29,8 +39,10 @@ Avl* rotateRight(Avl* node);
 Avl* rotateLeft(Avl* node);
 Avl* doubleRotateLeft(Avl* node);
 Avl* doubleRotateRight(Avl* node);
-Avl* equilibrerAVL(Avl* a);
+Avl* balanceAVL(Avl* a);
 Avl* insertAVL(Avl* a, long capacity, int id,  int *h);
+Avl* insertAvlByCapacity(Avl* a, unsigned long capacity, long load, int id, int* h);
+Avl* sortAvlByCapacity(Avl* tree, Avl* newTree);
 
 void checkStation(char* station);
 void checkType(char* type, char* station);
@@ -38,8 +50,6 @@ int checkChoicePp(char* arg, int choice_pp);
 
 void writeToCsv(FILE *csvFile, int id, long capacity, long load);
 void writeAVLToCsv(Avl *node, FILE *csvFile);
-void writeForGraph(FILE *csvFile, int id, long load);
-void writeAVLForGraph(Avl* node, FILE* csvFile);
 
 int research(Avl* node, int id, Avl** searched);
 void updateStation(Avl* tree, long load, int id);
