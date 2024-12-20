@@ -99,7 +99,7 @@ Avl *doubleRotateRight(Avl *node)
     return rotateRight(node);
 }
 
-Avl *equilibrerAVL(Avl *a)
+Avl *balanceAVL(Avl *a)
 {
     if (a->balance >= 2)
     { // When the shaft is unbalanced to the right
@@ -151,7 +151,7 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
     if (*h != 0)
     {
         a->balance += *h;
-        a = equilibrerAVL(a);
+        a = balanceAVL(a);
         if (a->balance == 0)
         {
             *h = 0;
@@ -247,9 +247,9 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
 
     if (strcmp("hvb", station) == 0 && !(strcmp("-", chvb) == 0))
     {
-        // If it's a hvb that doesn't give to anyone
         if (choice_pp == 0 || choice_pp == atoi(cpp))
         {
+            // If it's a hvb receiving energy
             if (strcmp("-", chva) == 0 && strcmp("-", ccapa) != 0)
             {
                 // Insert the station in the tree
@@ -291,13 +291,13 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
                 // Insert the station in the tree
                 tree = insertAVL(tree, atol(ccapa), atoi(clv), h);
             }
-            // To add that companies
+            // To add only companies
             else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && (strcmp("comp", type) == 0 || strcmp("all", type) == 0))
             {
                 // We add the extra consumption at the station
                 updateStation(tree, atol(cload), atoi(clv));
             }
-            // To add that private individuals
+            // To add only private individuals
             else if (strcmp("-", cload) != 0 && strcmp("-", cindiv) != 0 && (strcmp("indiv", type) == 0 || strcmp("all", type) == 0))
             {
                 // We add the extra consumption at the station
@@ -309,7 +309,7 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
     return tree;
 }
 
-// Fonction pour libérer l'arbre AVL
+
 void freeAVL(Avl *node)
 {
     if (node != NULL)
