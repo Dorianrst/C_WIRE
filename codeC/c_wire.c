@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n");
     printf("| |     ______   | || |              | || | _____  _____ | || |     _____    | || |  _______     | || |  _________   | |\n");
     printf("| |   .' ___  |  | || |              | || ||_   _||_   _|| || |    |_   _|   | || | |_   __ \\    | || | |_   ___  |  | |\n");
+    printf("| |  / .'   \\_|  | || |              | || |  | | /\\ | |  | || |      | |     | || |   | |__) |   | || |   | |_  \\_|  | |\n");
     printf("| |  | |         | || |              | || |  | |/  \\| |  | || |      | |     | || |   |  __ /    | || |   |  _|  _   | |\n");
     printf("| |  \\ `.___.'\\  | || |              | || |  |   /\\   |  | || |     _| |_    | || |  _| |  \\ \\_  | || |  _| |___/ |  | |\n");
     printf("| |   `._____.`  | || |   _______    | || |  |__/  \\__|  | || |    |_____|   | || | |____| |___| | || | |_________|  | |\n");
@@ -17,9 +18,6 @@ int main(int argc, char *argv[])
     printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
     printf("\033[0m"); // Reset colours
 
-    clock_t start, end;
-    double cpu_time_used;
-    start = clock(); // Start the stopwatch
 
     FILE *file;
     char line[256];
@@ -30,16 +28,18 @@ int main(int argc, char *argv[])
 
     char *cpp, *chvb, *chva, *clv, *ccomp, *cindiv, *ccapa, *cload;
 
-    int pp, hvb, hva, lv, comp, indiv, capa, load;
-    char *station = argv[2];
-    char *type = argv[3];
-
-    int choice_pp = atoi(argv[4]);
-
-    if (choice_pp < 0 || choice_pp > 5)
-    {
-        choice_pp = 0;
-    }
+    // Argument Checking
+	if(argc < 4 || argc > 5){
+		printf("There are not the right number of arguments.\n");
+        return 1;
+	}
+	char* station = argv[2];
+    checkStation(station);
+	
+    char* type = argv[3];
+    checkType(type, station);
+    
+    int choice_pp = checkChoicePp(argv[4], choice_pp);
 
     Avl *tree = NULL;
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     if (file == NULL)
     {
         printf("Error while opening file\n");
-        exit(2);
+        return 3;
     }
 
     fgets(line, sizeof(line), file); //  To skip the first line of the document
@@ -74,21 +74,24 @@ int main(int argc, char *argv[])
 
     FILE *csvFile;
 
+    // We write the name of the future document with the arguments
     char csv_address[256];
     strcpy(csv_address, "tests/");
-    strcat(csv_address, argv[2]);
+    strcat(csv_address, station);
     strcat(csv_address, "_");
-    strcat(csv_address, argv[3]);
-    strcat(csv_address, "_");
-    strcat(csv_address, argv[4]);
+    strcat(csv_address, type);
+    if(choice_pp != 0){
+    	strcat(csv_address, "_");
+    	strcat(csv_address, argv[4]);
+    }
     strcat(csv_address, ".csv");
 
     // Open a CSV file for writing
     csvFile = fopen(csv_address, "w");
     if (csvFile == NULL)
     {
-        fprintf(stderr, "Error: unable to create .csv file\n");
-        return EXIT_FAILURE;
+        printf("Error: unable to create .csv file\n");
+        return 4;
     }
 
     // Write the CSV file header
@@ -100,15 +103,14 @@ int main(int argc, char *argv[])
     fclose(csvFile);
 
     // Create a 2nd, slightly different file to create the graphics later.
-
     FILE *csvGraph;
 
     // Open a CSV file for writing
     csvGraph = fopen("Graphs/graphique.csv", "w");
     if (csvGraph == NULL)
     {
-        fprintf(stderr, "Error: unable to create graph.csv file\n");
-        return EXIT_FAILURE;
+        printf("Error: unable to create graph.csv file\n");
+        return 5;
     }
 
     // Browse the AVL and write the data to the CSV
@@ -119,8 +121,9 @@ int main(int argc, char *argv[])
     // close the principal file
     fclose(file);
 
-    printf("The data has been successfully exported to output.csv\n");
+    printf("The data has been successfully exported to %s\n", csv_address);
     freeAVL(tree);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
+

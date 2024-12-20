@@ -99,7 +99,7 @@ Avl *doubleRotateRight(Avl *node)
     return rotateRight(node);
 }
 
-Avl *equilibrerAVL(Avl *a)
+Avl *balanceAVL(Avl *a)
 {
     if (a->balance >= 2)
     { // When the shaft is unbalanced to the right
@@ -151,7 +151,7 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
     if (*h != 0)
     {
         a->balance += *h;
-        a = equilibrerAVL(a);
+        a = balanceAVL(a);
         if (a->balance == 0)
         {
             *h = 0;
@@ -163,6 +163,52 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
     }
     return a;
 }
+
+// We check the arguments
+void checkStation(char* station){
+    if(strcmp("hvb", station) != 0 && strcmp("hva", station) != 0 && strcmp("lv", station) != 0){
+        printf("Invalid station type. Allowed values: hvb, hva, lv.\n");
+        exit(2);
+    }
+}
+
+
+// We check the type variable
+void checkType(char* type, char* station){
+    if(strcmp("all", type) != 0 && strcmp("comp", type) != 0 && strcmp("indiv", type) != 0)
+    {
+		printf("Invalid consumer type. Allowed values: comp, indiv, all.\n");
+        exit(2);
+	}
+	else if(strcmp("hvb", station) == 0 && strcmp("comp", type) != 0)
+    {
+		printf("The ‘all’ and ‘indiv’ options are prohibited for HV-B and HV-A stations.\n");
+        exit(2);
+	}
+	else if(strcmp("hva", station) == 0 && strcmp("comp", type) != 0)
+    {
+		printf("The ‘all’ and ‘indiv’ options are prohibited for HV-B and HV-A stations.\n");
+        exit(2);
+	}
+}
+
+int checkChoicePp(char* arg, int choice_pp){
+    if(arg != NULL) // The choice of the power station has been made
+    { 
+		if(atoi(arg) < 0 || atoi(arg) > 5)
+        {
+			printf("The power station ID must be a number between 1 and 5.\n");
+		    return 0;
+		}
+        return atoi(arg);
+    }
+    else // So if the argument is not here, we take all the power stations.
+    { 
+        printf("No station ID provided. All power stations will be processed.\n");
+    	return 0;
+    }
+}
+
 
 // Function for writing a node to the CSV file
 void writeToCsv(FILE *csvFile, int id, long capacity, long load)
@@ -186,9 +232,9 @@ void writeAVLToCsv(Avl *node, FILE *csvFile)
     }
 }
 
-void writeForGraph(FILE *csvFile, int id, long load)
+void writeForGraph(FILE *csvFile, int id, long load, long capacity)
 {
-    fprintf(csvFile, "%d, %lu\n", id, load); // Format : id:load
+    fprintf(csvFile, "%d, %lu , %lu \n", id, load, capacity); // Format : id:load
 }
 
 void writeAVLForGraph(Avl *node, FILE *csvFile)
@@ -199,7 +245,7 @@ void writeAVLForGraph(Avl *node, FILE *csvFile)
         writeAVLForGraph(node->leftSon, csvFile);
 
         // Write current node (ID + Load only)
-        writeForGraph(csvFile, node->id, node->load);
+        writeForGraph(csvFile, node->id, node->load, node->capacity);
 
         // Recursive writing of right-hand nodes
         writeAVLForGraph(node->rightSon, csvFile);
@@ -247,9 +293,9 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
 
     if (strcmp("hvb", station) == 0 && !(strcmp("-", chvb) == 0))
     {
-        // If it's a hvb that doesn't give to anyone
         if (choice_pp == 0 || choice_pp == atoi(cpp))
         {
+            // If it's a hvb receiving energy
             if (strcmp("-", chva) == 0 && strcmp("-", ccapa) != 0)
             {
                 // Insert the station in the tree
@@ -291,13 +337,13 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
                 // Insert the station in the tree
                 tree = insertAVL(tree, atol(ccapa), atoi(clv), h);
             }
-            // To add that companies
+            // To add only companies
             else if (strcmp("-", cload) != 0 && strcmp("-", ccomp) != 0 && (strcmp("comp", type) == 0 || strcmp("all", type) == 0))
             {
                 // We add the extra consumption at the station
                 updateStation(tree, atol(cload), atoi(clv));
             }
-            // To add that private individuals
+            // To add only private individuals
             else if (strcmp("-", cload) != 0 && strcmp("-", cindiv) != 0 && (strcmp("indiv", type) == 0 || strcmp("all", type) == 0))
             {
                 // We add the extra consumption at the station
@@ -309,7 +355,7 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
     return tree;
 }
 
-// Fonction pour libérer l'arbre AVL
+
 void freeAVL(Avl *node)
 {
     if (node != NULL)

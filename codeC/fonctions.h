@@ -32,6 +32,10 @@ Avl* doubleRotateRight(Avl* node);
 Avl* equilibrerAVL(Avl* a);
 Avl* insertAVL(Avl* a, long capacity, int id,  int *h);
 
+void checkStation(char* station);
+void checkType(char* type, char* station);
+int checkChoicePp(char* arg, int choice_pp);
+
 void writeToCsv(FILE *csvFile, int id, long capacity, long load);
 void writeAVLToCsv(Avl *node, FILE *csvFile);
 void writeForGraph(FILE *csvFile, int id, long load);
