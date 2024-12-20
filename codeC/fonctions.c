@@ -34,6 +34,7 @@ Avl *createNode()
     new->capacity = 0;
     new->id = 0;
     new->load = 0;
+    new->difference = 0;
     return new;
 }
 
@@ -41,6 +42,15 @@ Avl *createAVL(long capacity, int id)
 {
     Avl *new = createNode();
     new->capacity = capacity;
+    new->id = id;
+    return new;
+}
+
+Avl *createAVL2(long capacity, long load, int id)
+{
+    Avl *new = createNode();
+    new->capacity = capacity;
+    new->load = load;
     new->id = id;
     return new;
 }
@@ -164,8 +174,160 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
     return a;
 }
 
+
+// Nouvelle fonction insert basée sur les capacités
+Avl* insertAvlByCapacity(Avl* a, unsigned long capacity, long load, int id, int* h)
+{
+    if (a == NULL)
+    {           // If the tree is empty, create a new node
+        *h = 1; // The height has increased
+        return createAVL2(capacity, load, id);
+    }
+    
+    else if (capacity < a->capacity)
+    { // If the element is smaller, insert on the left
+        a->leftSon = insertAvlByCapacity(a->leftSon, capacity, load, id, h);
+        *h = -*h; // Reverses the impact of height
+    }
+    else if (capacity > a->capacity)
+    { // If the element is larger, insert to the right
+        a->rightSon = insertAvlByCapacity(a->rightSon, capacity, load, id, h);
+    }
+    else
+    { // Si les capacités sont identiques, utilisez un critère secondaire
+        if (id < a->id) // Comparaison par ID
+        {
+            a->leftSon = insertAvlByCapacity(a->leftSon, capacity, load, id, h);
+            *h = -*h;
+        }
+        else if (id > a->id)
+        {
+            a->rightSon = insertAvlByCapacity(a->rightSon, capacity, load, id, h);
+        }
+        else
+        {
+            *h = 0; // Élément déjà présent
+            return a;
+        }
+    }
+
+    // Updating the balance factor and rebalancing if necessary
+    if (*h != 0)
+    {
+        a->balance += *h;
+        a = balanceAVL(a);
+        if (a->balance == 0)
+        {
+            *h = 0;
+        }
+        else
+        {
+            *h = 1;
+        }
+    }
+    return a;
+}
+
+Avl* sortAvlByCapacity(Avl* tree, Avl* newTree)
+{
+    if (tree == NULL) {
+        return newTree; // Arbre vide ou fin du parcours
+    }
+    int h = 0;
+
+    // Parcours gauche
+    newTree = sortAvlByCapacity(tree->leftSon, newTree);
+
+    // Insertion du nœud actuel dans le nouvel arbre trié par capacité
+    newTree = insertAvlByCapacity(newTree, tree->capacity, tree->load, tree->id, &h);
+
+    // Parcours droit
+    newTree = sortAvlByCapacity(tree->rightSon, newTree);
+
+    return newTree;
+}
+
+
+
+/*
+Cette partie du code n'est pas lancé car la partie sur la création du fichier lv_all_minmax.csv ne fonctionne pas et n'est pas terminé
+
+
+
+// Fonction pour insérer un nœud trié par ratio dans un tableau
+void insertIntoSortedArray(ResultNode* array, int size, ResultNode node, int maxSize) {
+    // Trouver la position d'insertion
+    int i = size - 1;
+    while (i >= 0 && array[i].ratio > node.ratio) {
+        if (i + 1 < maxSize) {
+            array[i + 1] = array[i]; // Décaler les éléments
+        }
+        i--;
+    }
+    if (i + 1 < maxSize) {
+        array[i + 1] = node; // Insérer le nouvel élément
+    }
+}
+
+
+// Fonction pour parcourir l'AVL et trouver les ratios extrêmes
+void findExtremeRatios(Avl* node, ResultNode* minArray, int* minSize, ResultNode* maxArray, int* maxSize, int maxResults) {
+    if (node == NULL){
+        return;
+    }
+
+    // Parcourir le sous-arbre gauche
+    findExtremeRatios(node->leftSon, minArray, minSize, maxArray, maxSize, maxResults);
+
+    // Calculer le ratio pour le nœud courant
+    long ratio = node->capacity - node->load;
+    ResultNode currentNode = {node->id, node->capacity, node->load, ratio};
+
+    // Maintenir les 10 plus petits ratios
+    if (*minSize < maxResults) {
+        minArray[(*minSize)++] = currentNode;
+    } else if (ratio < minArray[*minSize - 1].ratio) {
+        insertIntoSortedArray(minArray, *minSize, currentNode, maxResults);
+    }
+
+    // Maintenir les 10 plus grands ratios
+    if (*maxSize < maxResults) {
+        maxArray[(*maxSize)++] = currentNode;
+    } else if (ratio > maxArray[*maxSize - 1].ratio) {
+        insertIntoSortedArray(maxArray, *maxSize, currentNode, maxResults);
+    }
+
+    // Parcourir le sous-arbre droit
+    findExtremeRatios(node->rightSon, minArray, minSize, maxArray, maxSize, maxResults);
+}
+
+
+
+// Fonction pour écrire les résultats dans un fichier CSV
+void writeResultsToCsv(const char* filename, ResultNode* results, int size) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Erreur d'ouverture du fichier pour les 10 min et max");
+        exit(6);
+    }
+
+    // Écriture des en-têtes
+    fprintf(file, "ID,Capacity,Load\n");
+
+    // Écriture des données
+    for (int i = 0; i < size; i++) {
+        fprintf(file, "%d,%ld,%ld,%ld\n", results[i].id, results[i].capacity, results[i].load, results[i].ratio);
+    }
+
+    fclose(file);
+}
+*/
+
+
+
 // We check the arguments
-void checkStation(char* station){
+void checkStation(char* station)
+{
     if(strcmp("hvb", station) != 0 && strcmp("hva", station) != 0 && strcmp("lv", station) != 0){
         printf("Invalid station type. Allowed values: hvb, hva, lv.\n");
         exit(2);
@@ -174,7 +336,8 @@ void checkStation(char* station){
 
 
 // We check the type variable
-void checkType(char* type, char* station){
+void checkType(char* type, char* station)
+{
     if(strcmp("all", type) != 0 && strcmp("comp", type) != 0 && strcmp("indiv", type) != 0)
     {
 		printf("Invalid consumer type. Allowed values: comp, indiv, all.\n");
@@ -192,7 +355,8 @@ void checkType(char* type, char* station){
 	}
 }
 
-int checkChoicePp(char* arg, int choice_pp){
+int checkChoicePp(char* arg, int choice_pp)
+{
     if(arg != NULL) // The choice of the power station has been made
     { 
 		if(atoi(arg) < 0 || atoi(arg) > 5)
@@ -232,25 +396,7 @@ void writeAVLToCsv(Avl *node, FILE *csvFile)
     }
 }
 
-void writeForGraph(FILE *csvFile, int id, long load, long capacity)
-{
-    fprintf(csvFile, "%d, %lu , %lu \n", id, load, capacity); // Format : id:load
-}
 
-void writeAVLForGraph(Avl *node, FILE *csvFile)
-{
-    if (node != NULL)
-    {
-        // Recursive writing of left-hand nodes
-        writeAVLForGraph(node->leftSon, csvFile);
-
-        // Write current node (ID + Load only)
-        writeForGraph(csvFile, node->id, node->load, node->capacity);
-
-        // Recursive writing of right-hand nodes
-        writeAVLForGraph(node->rightSon, csvFile);
-    }
-}
 
 int research(Avl *node, int id, Avl **searched)
 {
@@ -285,6 +431,8 @@ void updateStation(Avl *tree, long load, int id)
 
     station->load += load;
 }
+
+
 
 Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload)
 {
