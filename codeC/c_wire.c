@@ -160,6 +160,13 @@ int main(int argc, char *argv[])
     freeAVL(tree);
     freeAVL(newTree);
 
+    /*const char *input_file = "lv_all_1.csv";
+    const char *output_file = "output2.csv";
+
+    process_csv(input_file, output_file);
+
+    printf("Processing complete. Results saved to %s\n", output_file);
+	*/
     return 0;
 }
 
