@@ -164,6 +164,52 @@ Avl *insertAVL(Avl *a, long capacity, int id, int *h)
     return a;
 }
 
+// We check the arguments
+void checkStation(char* station){
+    if(strcmp("hvb", station) != 0 && strcmp("hva", station) != 0 && strcmp("lv", station) != 0){
+        printf("Invalid station type. Allowed values: hvb, hva, lv.\n");
+        exit(2);
+    }
+}
+
+
+// We check the type variable
+void checkType(char* type, char* station){
+    if(strcmp("all", type) != 0 && strcmp("comp", type) != 0 && strcmp("indiv", type) != 0)
+    {
+		printf("Invalid consumer type. Allowed values: comp, indiv, all.\n");
+        exit(2);
+	}
+	else if(strcmp("hvb", station) == 0 && strcmp("comp", type) != 0)
+    {
+		printf("The ‘all’ and ‘indiv’ options are prohibited for HV-B and HV-A stations.\n");
+        exit(2);
+	}
+	else if(strcmp("hva", station) == 0 && strcmp("comp", type) != 0)
+    {
+		printf("The ‘all’ and ‘indiv’ options are prohibited for HV-B and HV-A stations.\n");
+        exit(2);
+	}
+}
+
+int checkChoicePp(char* arg, int choice_pp){
+    if(arg != NULL) // The choice of the power station has been made
+    { 
+		if(atoi(arg) < 0 || atoi(arg) > 5)
+        {
+			printf("The power station ID must be a number between 1 and 5.\n");
+		    return 0;
+		}
+        return atoi(arg);
+    }
+    else // So if the argument is not here, we take all the power stations.
+    { 
+        printf("No station ID provided. All power stations will be processed.\n");
+    	return 0;
+    }
+}
+
+
 // Function for writing a node to the CSV file
 void writeToCsv(FILE *csvFile, int id, long capacity, long load)
 {
