@@ -18,7 +18,7 @@ start=$(date +%s)
 # Dynamic relative paths
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
-DATA_FILE="$SCRIPT_DIR/Input/c-wire_v00.dat"
+DATA_FILE="$SCRIPT_DIR/Input/c-wire_v25.dat"
 EXECUTABLE="$SCRIPT_DIR/codeC/c_wire"
 # Function for cleaning the spaces around a chain
 trim() {
