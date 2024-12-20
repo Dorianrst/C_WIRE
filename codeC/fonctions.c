@@ -502,6 +502,36 @@ Avl *buildAvl(Avl *tree, char *station, char *type, int choice_pp, char *cpp, ch
     return tree;
 }
 
+void process_csv(const char *input_file, const char *output_file) {
+    FILE *input = fopen(input_file, "r");
+    FILE *output = fopen(output_file, "w");
+
+    if (!input || !output) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[MAX_LINE];
+    fprintf(output, "Station ID,Capacity,Load,Difference\n");
+
+    while (fgets(line, sizeof(line), input)) {
+        Record record;
+        char *token = strtok(line, ":");
+        record.station_id = atoi(token);
+
+        token = strtok(NULL, ":");
+        record.capacity = atoi(token);
+
+        token = strtok(NULL, ":");
+        record.load = atoi(token);
+
+        int difference = record.capacity - record.load;
+        fprintf(output, "%d,%d,%d,%d\n", record.station_id, record.capacity, record.load, difference);
+    }
+
+    fclose(input);
+    fclose(output);
+}
 
 void freeAVL(Avl *node)
 {
