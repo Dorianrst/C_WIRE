@@ -216,7 +216,7 @@ bash SHELL/c_wire.sh <Data_file> <station_type> <consumer_type> [ID]
 
 -To process all stations of type hvb for individual consumers:
 ```bash
-    bash SHELL/c_wire.sh c-wire_v25.dat hvb indiv
+    bash SHELL/c_wire.sh c-wire_v25.dat hvb comp
 ```
 -To process station ID 3 of type hva for company consumers:
 ```bash
@@ -227,7 +227,7 @@ bash SHELL/c_wire.sh c-wire_v25.dat hva comp 3
 ## 💾 **Output**
 
 - Data Analysis:
- Results are saved in a .csv file in the project root directory.
+ Results are saved in a .csv file in the the tests/ directory.
 
 -Graphical Representation:
  Generated graphs are stored in the Graphs/ directory.
@@ -235,10 +235,7 @@ bash SHELL/c_wire.sh c-wire_v25.dat hva comp 3
 At the end of execution, the script also displays the total runtime in seconds.
 
 ---
-## 🎵 **For Music**
-If you want to listen to some nice music, just run c_wire.c with no arguments!
 
----
 
 ## 📂**Projet Structure**
 
