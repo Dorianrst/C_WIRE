@@ -232,9 +232,9 @@ void writeAVLToCsv(Avl *node, FILE *csvFile)
     }
 }
 
-void writeForGraph(FILE *csvFile, int id, long load)
+void writeForGraph(FILE *csvFile, int id, long load, long capacity)
 {
-    fprintf(csvFile, "%d, %lu\n", id, load); // Format : id:load
+    fprintf(csvFile, "%d, %lu , %lu \n", id, load, capacity); // Format : id:load
 }
 
 void writeAVLForGraph(Avl *node, FILE *csvFile)
@@ -245,7 +245,7 @@ void writeAVLForGraph(Avl *node, FILE *csvFile)
         writeAVLForGraph(node->leftSon, csvFile);
 
         // Write current node (ID + Load only)
-        writeForGraph(csvFile, node->id, node->load);
+        writeForGraph(csvFile, node->id, node->load, node->capacity);
 
         // Recursive writing of right-hand nodes
         writeAVLForGraph(node->rightSon, csvFile);
